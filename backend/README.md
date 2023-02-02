@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![alt text](https://github.com/etkndr/meetup_proj/backend/blob/main/Screen%20Shot%202023-02-01%20at%209.43.04%20PM.png)
+![alt text](https://github.com/etkndr/meetup_proj/blob/main/backend/Screen%20Shot%202023-02-01%20at%209.43.04%20PM.png)
 
 ## API Documentation
 
