@@ -7,8 +7,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     toSafeObject() {
-      const { id, username, email } = this; // context will be the User instance
-      return { id, username, email };
+      const { id, firstName, lastName, username, email } = this; // context will be the User instance
+      return { id, firstName, lastName, username, email };
     }
     validatePassword(password) {
       return bcrypt.compareSync(password, this.password.toString());
@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
     }
     static async signup({ username, email, password, firstName, lastName }) {
       const hashedPassword = bcrypt.hashSync(password);
-      console.log(`hashedPassword: ${hashedPassword}`)
       const user = await User.create({
         username,
         email,
