@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require("bcryptjs")
+const validator = require("validator")
 const {
   Model
 } = require('sequelize');
@@ -29,12 +30,15 @@ module.exports = (sequelize, DataTypes) => {
         return await User.scope('currentUser').findByPk(user.id);
       }
     }
-    static async signup({ username, email, password }) {
+    static async signup({ username, email, password, firstName, lastName }) {
       const hashedPassword = bcrypt.hashSync(password);
+      console.log(`hashedPassword: ${hashedPassword}`)
       const user = await User.create({
         username,
         email,
-        hashedPassword
+        password: hashedPassword,
+        firstName,
+        lastName
       });
       return await User.scope('currentUser').findByPk(user.id);
     }
@@ -42,64 +46,61 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isNotEmail(value) {
-          if (Validator.isEmail(value)) {
-            throw new Error("Cannot be an email.");
+  User.init(
+    {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [4, 30],
+          isNotEmail(value) {
+            if (validator.isEmail(value)) {
+              throw new Error("Cannot be an email.");
+            }
           }
-        },
-        len: [4, 30]
-      }
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        len: [3, 256],
-        isEmail: true
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [60,60]
-      }
-    }
-  }, {
-    sequelize,
-    modelName: 'User',
-    defaultScope: {
-      attributes: {
-      exclude: [
-        "createdAt", "updatedAt", "email", "password"
-      ]
-    }
-    },
-    scopes: {
-      currentUser: {
-        attributes: {
-          exclude: ["password"]
         }
       },
-      loginUser: {
-        attributes: {}
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [3, 256],
+          isEmail: true
+        }
+      },
+      password: {
+        type: DataTypes.STRING.BINARY,
+        allowNull: false,
+        validate: {
+          len: [60, 60]
+        }
+      }
+    },
+    {
+      sequelize,
+      modelName: "User",
+      defaultScope: {
+        attributes: {
+          exclude: ["password", "email", "createdAt", "updatedAt"]
+        }
+      },
+      scopes: {
+        currentUser: {
+          attributes: { exclude: ["password"] }
+        },
+        loginUser: {
+          attributes: {}
+        }
       }
     }
-  });
+  );
   return User;
 };
