@@ -10,19 +10,52 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Event.belongsTo(models.Group, {foreignKey: "groupId"})
+      Event.belongsTo(models.Venue, {foreignKey: "venueId"})
+      Event.hasMany(models.Attendance, {foreignKey: "eventId"})
+      Event.hasMany(models.EventImage, {foreignKey: "eventId"})
     }
   }
   Event.init({
-    groupId: DataTypes.INTEGER,
-    venueId: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    type: DataTypes.STRING,
-    capacity: DataTypes.INTEGER,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
-    description: DataTypes.STRING,
-    price: DataTypes.DECIMAL
+    groupId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {model: "Groups"},
+      onDelete: "CASCADE"
+    },
+    venueId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {model: "Venues"},
+      onDelete: "CASCADE"
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Event',

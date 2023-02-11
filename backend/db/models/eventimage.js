@@ -10,13 +10,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      EventImage.belongsTo(models.Event, {foreignKey: "eventId"})
     }
   }
   EventImage.init({
-    eventId: DataTypes.INTEGER,
-    url: DataTypes.STRING,
-    preview: DataTypes.BOOLEAN
+    eventId: {
+      type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {model: "Events"},
+    onDelete: "CASCADE"
+  },
+    url: {
+      type: DataTypes.STRING,
+    allowNull: false
+  },
+    preview: {
+      type: DataTypes.BOOLEAN,
+    allowNull: false
+  },
   }, {
     sequelize,
     modelName: 'EventImage',

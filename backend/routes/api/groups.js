@@ -1,13 +1,15 @@
 const express = require('express')
+const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { Group, User } = require('../../db/models');
+const { Group, User, Membership } = require('../../db/models');
 const router = express.Router();
 
 router.use(restoreUser)
 
 // get all groups
 router.get("/", async (req, res) => {
-    const groups = await Group.findAll()
+    const groups = await Group.findAll({
+    })
 
     return res.status(200).json(groups)
 })
@@ -40,9 +42,10 @@ router.get("/current", restoreUser, async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     const id = req.params.id
     const group = await Group.findByPk(id)
+
     if (!group) {
         const err = new Error('Group not found');
-        err.status = 401;
+        err.status = 404;
         return next(err)
     }
 
