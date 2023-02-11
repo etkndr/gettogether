@@ -11,14 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Group.belongsTo(models.User, {foreignKey: "organizerId"})
+      Group.hasMany(models.Membership, {foreignKey: "groupId"})
     }
   }
   Group.init({
     organizerId: {
       type: DataTypes.INTEGER,
-      // allowNull: false,
+      allowNull: false,
       references: {model: "Users"},
-      onDelete: "CACADE"
+      onDelete: "CASCADE"
     },
     name: {
       type: DataTypes.STRING,
