@@ -40,4 +40,10 @@ const validateSignup = [
     }
   );
 
+  router.get("/", async (req,res) => {
+    const all = await User.findAll()
+
+    return res.status(200).json(all)
+  })
+
 module.exports = router;
