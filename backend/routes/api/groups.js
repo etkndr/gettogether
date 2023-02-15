@@ -9,18 +9,32 @@ router.use(restoreUser)
 // get all groups
 router.get("/", async (req, res) => {
     const groups = await Group.findAll({
+        attributes: { 
+            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
+        },
+        include: [{
+            model: Membership, attributes: []
+        }],
+        group: ["Group.id"]
     })
 
     return res.status(200).json(groups)
 })
 
+// get groups of current user
 router.get("/current", restoreUser, async (req, res, next) => {
     const { user } = await req
-    console.log(user)
     const userGroups = await Group.findAll(
         {where: {
             organizerId: user.id
-        }}
+        },
+        attributes: { 
+            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
+        },
+        include: [{
+            model: Membership, attributes: []
+        }],
+        group: ["Group.id"]}
     )
 
     if (!user) {
@@ -41,8 +55,16 @@ router.get("/current", restoreUser, async (req, res, next) => {
 // get group by id
 router.get("/:id", async (req, res, next) => {
     const id = req.params.id
-    const group = await Group.findByPk(id)
-    const numMem = await group.getMembership()
+    const organizerId = Group.findByPk(id).organizerId
+    const group = await Group.scope({ method: ["organizer", organizerId] }).findByPk(id, {
+        attributes: { 
+            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
+        },
+        include: [{
+            model: Membership, attributes: []
+        }],
+        group: ["Group.id"]
+    })
 
     if (!group) {
         const err = new Error('Group not found');

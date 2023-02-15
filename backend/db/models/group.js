@@ -1,4 +1,7 @@
 'use strict';
+
+const {Membership} = require("../models")
+
 const {
   Model
 } = require('sequelize');
@@ -57,10 +60,21 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Group',
     defaultScope: {
-      attributes: {
 
-      }
     },
+    scopes: {
+      organizer(userId) {
+        const {User} = require("../models")
+        return {
+          where: {
+            id: userId
+          },
+          include: [
+            {model: User}
+          ]
+        }
+      }
+    }
   });
   return Group;
 };
