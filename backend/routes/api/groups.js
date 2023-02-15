@@ -42,6 +42,7 @@ router.get("/current", restoreUser, async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
     const id = req.params.id
     const group = await Group.findByPk(id)
+    const numMem = await group.getMembership()
 
     if (!group) {
         const err = new Error('Group not found');

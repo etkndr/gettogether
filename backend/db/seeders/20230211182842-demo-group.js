@@ -19,7 +19,7 @@ module.exports = {
     options.tableName = 'Groups';
     return queryInterface.bulkInsert(options, [
       {
-        organizerId: 4,
+        organizerId: 1,
         name: 'Group 1',
         about: "test group",
         type: "In person",
