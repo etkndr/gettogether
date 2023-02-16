@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 
 // get groups of current user
 router.get("/current", restoreUser, async (req, res, next) => {
-    const { user } = await req
+    const { user } = req
     const userGroups = await Group.findAll(
         {where: {
             organizerId: user.id
@@ -80,5 +80,71 @@ router.get("/:id", async (req, res, next) => {
     return res.status(200).json(group)
 })
 
+//create new group
+router.post("/", async (req,res,next) => {
+    const {user} = req
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    const {name, about, type, private, city, state} = req.body
+
+    if (!name || !about || !type || !private || !city || !state) {
+        const err = new Error("Requires name, about, type, privacy, city, state")
+        err.status = 400
+        return next(err)
+    }
+
+    const newGroup = await Group.create(
+        {
+            organizerId: user.id,
+            name,
+            about,
+            type,
+            private,
+            city,
+            state
+        }
+    )
+
+    return res.status(200).json(newGroup)
+})
+
+//add image to group
+router.post("/:id/images", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const {url, preview} = req.body
+    const group = await Group.findByPk(id)
+
+    if (!group) {
+        const err = new Error(`No group with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    if (user.id !== group.organizerId) {
+        const err = new Error("Only group organizer can add images")
+        err.status = 400
+        return next(err)
+    }
+
+    const grpImg = await GroupImage.create({
+        groupId: id,
+        url,
+        preview
+    })
+
+    return res.status(200).json(grpImg)
+})
 
 module.exports = router
