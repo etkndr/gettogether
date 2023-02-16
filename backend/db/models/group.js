@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Group.belongsTo(models.User, {foreignKey: "organizerId"})
+      Group.belongsTo(models.User, {foreignKey: "organizerId", as: "organizer"})
       Group.hasMany(models.Membership, {foreignKey: "groupId"})
       Group.hasMany(models.Event, {foreignKey: "eventId"})
       Group.hasMany(models.GroupImage, {foreignKey: "groupId"}),
@@ -70,7 +70,18 @@ module.exports = (sequelize, DataTypes) => {
             id: userId
           },
           include: [
-            {model: User}
+            {model: User, as: "organizer"}
+          ]
+        }
+      },
+      grpImg(imgId) {
+        const {GroupImage} = require("../models")
+        return {
+          where: {
+            id: imgId
+          },
+          include: [
+            {model: GroupImage}
           ]
         }
       }

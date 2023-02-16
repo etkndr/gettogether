@@ -1,7 +1,7 @@
 const express = require('express')
 const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { Group, User, Membership } = require('../../db/models');
+const { Group, User, Membership, GroupImage } = require('../../db/models');
 const router = express.Router();
 
 router.use(restoreUser)
@@ -55,8 +55,13 @@ router.get("/current", restoreUser, async (req, res, next) => {
 // get group by id
 router.get("/:id", async (req, res, next) => {
     const id = req.params.id
-    const organizerId = Group.findByPk(id).organizerId
-    const group = await Group.scope({ method: ["organizer", organizerId] }).findByPk(id, {
+    const organizerId = await Group.findByPk(id).organizerId
+    const imgId = await GroupImage.findAll({
+        where: {
+            groupId: id
+        }
+    })
+    const group = await Group.scope([{ method: ["organizer", organizerId] }, {method: ["grpImg", imgId]}]).findByPk(id, {
         attributes: { 
             include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
         },
