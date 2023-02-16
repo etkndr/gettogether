@@ -1,7 +1,7 @@
 const express = require('express')
 const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { Group, User, Membership, GroupImage } = require('../../db/models');
+const { Group, User, Membership, GroupImage, Venue } = require('../../db/models');
 const router = express.Router();
 
 router.use(restoreUser)
@@ -225,6 +225,75 @@ router.delete("/:id", async (req,res,next) => {
     })
 
     return res.status(200).json({message: `Group ${id} deleted`})
+})
+
+//get venues for group
+router.get("/:id/venues", async (req,res,next) => {
+    const id = req.params.id
+    const group = await Group.findByPk(id)
+    const venue = await Venue.findAll({
+        where: {
+            groupId: id
+        }
+    })
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    return res.status(200).json(venue)
+})
+
+//create new venue for group
+router.post("/:id/venues", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const {address, city, state, lat, lng} = req.body
+    const group = await Group.findByPk(id)
+    const cohost = await Membership.findAll({
+        where: {
+            groupId: id,
+            userId: user.id,
+            status: "co-host"
+        }
+    })
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!cohost || user.id !== group.organizerId) {
+        const err = new Error("Only group organizer or co-host can add a venue")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!address || !city || !state || !lat || !lng) {
+        const err = new Error("Requires address, city, state, latitude, and longitude")
+        err.status = 400
+        return next(err)
+    }
+
+    const venue = await Venue.create({
+        groupId: id,
+        address,
+        city,
+        state,
+        lat,
+        lng
+    })
+
+    return res.status(200).json(venue)
 })
 
 
