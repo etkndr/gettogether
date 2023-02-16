@@ -70,7 +70,7 @@ router.get("/:id", async (req, res, next) => {
         }],
         group: ["Group.id"]
     })
-
+    
     if (!group) {
         const err = new Error('Group not found');
         err.status = 404;
@@ -83,6 +83,7 @@ router.get("/:id", async (req, res, next) => {
 //create new group
 router.post("/", async (req,res,next) => {
     const {user} = req
+    const {name, about, type, private, city, state} = req.body
 
     if (!user) {
         const err = new Error("Not logged in")
@@ -90,7 +91,6 @@ router.post("/", async (req,res,next) => {
         return next(err)
     }
 
-    const {name, about, type, private, city, state} = req.body
 
     if (!name || !about || !type || !private || !city || !state) {
         const err = new Error("Requires name, about, type, privacy, city, state")
@@ -146,5 +146,86 @@ router.post("/:id/images", async (req,res,next) => {
 
     return res.status(200).json(grpImg)
 })
+
+//edit group by id
+router.put("/:id", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const group = await Group.findByPk(id)
+    const {name, about, type, private, city, state} = req.body
+    
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+
+    if (user.id !== group.organizerId) {
+        const err = new Error("Only group organizer can edit a group")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!name || !about || !type || !private || !city || !state) {
+        const err = new Error("Requires name, about, type, privacy, city, state")
+        err.status = 400
+        return next(err)
+    }
+
+
+    group.set({
+        organizerId: user.id,
+        name,
+        about,
+        type,
+        private,
+        city,
+        state
+    })
+
+    return res.status(200).json(group)
+})
+
+//delete group
+router.delete("/:id", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const group = await Group.findByPk(id)
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+
+    if (user.id !== group.organizerId) {
+        const err = new Error("Only group organizer can delete a group")
+        err.status = 400
+        return next(err)
+    }
+
+    await Group.destroy({
+        where: {
+            id: id
+        }
+    })
+
+    return res.status(200).json({message: `Group ${id} deleted`})
+})
+
 
 module.exports = router
