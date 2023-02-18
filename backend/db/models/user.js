@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       return await User.scope('currentUser').findByPk(user.id);
     }
     static associate(models) {
-      User.hasMany(models.Group, {foreignKey: "organizerId"})
+      User.hasMany(models.Group, {foreignKey: "organizerId", as: "organizer"})
       User.hasMany(models.Membership, {foreignKey: "userId"})
       User.hasMany(models.Attendance, {foreignKey: "userId"})
     }

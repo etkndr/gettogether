@@ -1,4 +1,7 @@
 'use strict';
+
+const {Membership} = require("../models")
+
 const {
   Model
 } = require('sequelize');
@@ -10,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Group.belongsTo(models.User, {foreignKey: "organizerId"})
+      Group.belongsTo(models.User, {foreignKey: "organizerId", as: "organizer"})
       Group.hasMany(models.Membership, {foreignKey: "groupId"})
       Group.hasMany(models.Event, {foreignKey: "eventId"})
       Group.hasMany(models.GroupImage, {foreignKey: "groupId"}),
@@ -57,10 +60,32 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Group',
     defaultScope: {
-      attributes: {
 
-      }
     },
+    scopes: {
+      organizer(userId) {
+        const {User} = require("../models")
+        return {
+          where: {
+            id: userId
+          },
+          include: [
+            {model: User, as: "organizer"}
+          ]
+        }
+      },
+      grpImg(imgId) {
+        const {GroupImage} = require("../models")
+        return {
+          where: {
+            id: imgId
+          },
+          include: [
+            {model: GroupImage}
+          ]
+        }
+      }
+    }
   });
   return Group;
 };

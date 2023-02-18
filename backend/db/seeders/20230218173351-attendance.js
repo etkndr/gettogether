@@ -9,12 +9,12 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    options.tableName = 'GroupImages';
+    options.tableName = 'Attendances';
     return queryInterface.bulkInsert(options, [
       {
-        groupId: 1,
-        url: "www.example.com/img.png",
-        preview: true
+        eventId: 1,
+        userId: 1,
+        status: "waitlist"
       },
     /**
      * Add seed commands here.
@@ -28,7 +28,7 @@ module.exports = {
     ])},
 
     async down (queryInterface, Sequelize) {
-      options.tableName = 'GroupImages';
+      options.tableName = 'Attendances';
       const Op = Sequelize.Op;
       return queryInterface.bulkDelete(options, {});
     }

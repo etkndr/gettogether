@@ -1,8 +1,28 @@
 'use strict';
+const bcrypt = require("bcryptjs");
+const {User, EventImage, Group, Venue, Attendance} = require("../models")
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+    options.tableName = 'Events';
+    return queryInterface.bulkInsert(options, [
+      {
+        groupId: 1,
+        venueId: 1,
+        name: "Demo event",
+        type: "In person",
+        capacity: 100,
+        startDate: "2021-11-19 20:00:00",
+        endDate: "2021-11-20 20:00:00",
+        description: "Demo event for testing",
+        price: 18.50
+      },
     /**
      * Add seed commands here.
      *
@@ -12,14 +32,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-  },
+    ])},
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  }
+    async down (queryInterface, Sequelize) {
+      options.tableName = 'Events';
+      const Op = Sequelize.Op;
+      return queryInterface.bulkDelete(options, {});
+    }
 };
