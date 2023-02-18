@@ -1,7 +1,7 @@
 const express = require('express')
 const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
-const { Group, User, Membership, GroupImage, Venue } = require('../../db/models');
+const { Group, User, Membership, GroupImage, Venue, Event, Attendance, EventImage } = require('../../db/models');
 const router = express.Router();
 
 router.use(restoreUser)
@@ -294,6 +294,105 @@ router.post("/:id/venues", async (req,res,next) => {
     })
 
     return res.status(200).json(venue)
+})
+
+//get group's events
+router.get("/:id/events", async (req,res,next) => {
+    const id = req.params.id
+    const group = await Group.findByPk(id)
+    const events = await Event.findAll({
+        where: {
+            groupId: id
+        },
+        attributes: { 
+            include: [
+                [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
+            ] 
+        },
+        include: [
+            {
+                model: Attendance, attributes: []
+            },
+            {
+                model: Group, attributes: ["id", "name", "city", "state"]
+            },
+            {
+                model: Venue, attributes: ["id", "city", "state"]
+            },
+            {
+                model: EventImage, attributes: ["preview"]
+            }
+    ],
+        group: ["Event.id"]
+    })
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    return res.status(200).json(events)
+})
+
+//create new event by group id
+router.post("/:id/events", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const {venueId, name, type, capacity, startDate, endDate, description, price} = req.body
+    const group = await Group.findByPk(id)
+    const cohost = await Membership.findAll({
+        where: {
+            groupId: id,
+            userId: user.id,
+            status: "co-host"
+        }
+    })
+    const venue = await Venue.findByPk(venueId)
+    
+    if (venueId && !venue) {
+        const err = new Error(`Venue does not exist with id ${venueId}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!user) {
+        const err = new Error("Not logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!cohost || user.id !== group.organizerId) {
+        const err = new Error("Only group organizer or co-host can add a venue")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!name || !type || !capacity || !startDate || !endDate || !description || !price) {
+        const err = new Error("Requires name, type, capacity, start, end, description, and price")
+        err.status = 400
+        return next(err)
+    }
+
+    const event = await Event.create({
+        groupId: id,
+        venueId,
+        name, 
+        type, 
+        capacity, 
+        startDate, 
+        endDate, 
+        description, 
+        price
+    })
+
+    return res.status(200).json(event)
 })
 
 

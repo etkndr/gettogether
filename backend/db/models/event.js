@@ -1,5 +1,5 @@
 'use strict';
-const {EventImage, Attendance} = require("../models")
+const {EventImage, Attendance, Group, Venue} = require("../models")
 
 const {
   Model
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {model: "Venues"},
       onDelete: "CASCADE"
     },
@@ -60,12 +60,13 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'Event',
-    defaultScope: {
-      attributes: {
-        exclude: ["eventId"]
-      }
-    }
+    modelName: 'Event'
   });
+
+  Event.addScope("defaultScope", {
+    attributes: {
+    exclude: ["eventId"]
+    }
+  })
   return Event;
 };
