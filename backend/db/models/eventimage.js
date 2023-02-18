@@ -1,4 +1,6 @@
 'use strict';
+const {Event} = require("../models")
+
 const {
   Model
 } = require('sequelize');

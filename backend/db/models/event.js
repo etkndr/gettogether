@@ -1,4 +1,6 @@
 'use strict';
+const {EventImage, Attendance} = require("../models")
+
 const {
   Model
 } = require('sequelize');
@@ -59,6 +61,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    defaultScope: {
+      attributes: {
+        exclude: ["eventId"]
+      }
+    }
   });
   return Event;
 };
