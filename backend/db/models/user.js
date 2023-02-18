@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       User.hasMany(models.Group, {foreignKey: "organizerId", as: "organizer"})
-      User.hasMany(models.Membership, {foreignKey: "userId"})
+      User.hasMany(models.Membership, {foreignKey: "memberId"})
       User.hasMany(models.Attendance, {foreignKey: "userId"})
     }
   }

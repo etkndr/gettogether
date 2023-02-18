@@ -141,7 +141,7 @@ router.put("/:id", async (req,res,next) => {
     }
     
     
-    if (user.id !== group.organizerId || !cohost) {
+    if (user.id !== group.organizerId && !cohost) {
         const err = new Error(`Must be group organizer or co-host`)
         err.status = 400
         return next(err)
@@ -201,7 +201,7 @@ router.delete("/:id", async (req,res,next) => {
     }
 
 
-    if (user.id !== group.organizerId || !cohost) {
+    if (user.id !== group.organizerId && !cohost) {
         const err = new Error(`Must be group organizer or co-host`)
         err.status = 400
         return next(err)
@@ -209,6 +209,41 @@ router.delete("/:id", async (req,res,next) => {
 
     await event.destroy(id)
     return res.status(200).json({message: `Successfully deleted event ${id}`})
+})
+
+//get attendees
+router.get("/:id/attendees", async (req,res,next) => {
+    const id = req.params.id
+    const event = await Event.findByPk(id, {
+        include: [
+            {
+                model: Attendance, attributes: ["id", firstN]
+            }
+        ]
+    })
+
+    if (!event) {
+        const err = new Error(`No event with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    // const attend = await Attendance.findAll({
+    //     where: {
+    //         eventId: event.id
+    //     },
+    //     include: [
+    //         {
+    //             model: Membership, attributes: ["status"]
+    //         }
+    //     ]
+    // })
+
+    // if (!attend.length) {
+    //     return res.status(200).json({message: "No attendees for this event"})
+    // }
+
+    return res.status(200).json(event)
 })
 
 module.exports = router

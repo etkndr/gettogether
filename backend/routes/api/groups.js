@@ -2,6 +2,7 @@ const express = require('express')
 const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { Group, User, Membership, GroupImage, Venue, Event, Attendance, EventImage } = require('../../db/models');
+const { or } = require('sequelize');
 const router = express.Router();
 
 router.use(restoreUser)
@@ -272,7 +273,7 @@ router.post("/:id/venues", async (req,res,next) => {
         return next(err)
     }
 
-    if (!cohost || user.id !== group.organizerId) {
+    if (!cohost && user.id !== group.organizerId) {
         const err = new Error("Only group organizer or co-host can add a venue")
         err.status = 400
         return next(err)
@@ -368,7 +369,7 @@ router.post("/:id/events", async (req,res,next) => {
         return next(err)
     }
 
-    if (!cohost || user.id !== group.organizerId) {
+    if (!cohost && user.id !== group.organizerId) {
         const err = new Error("Only group organizer or co-host can add a venue")
         err.status = 400
         return next(err)
@@ -395,5 +396,198 @@ router.post("/:id/events", async (req,res,next) => {
     return res.status(200).json(event)
 })
 
+//get all members of group
+router.get("/:id/members", async (req,res,next) => {
+    const {user} = req
+    const id = req.params.id
+    const group = await Group.findByPk(id)
+    
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    //if user is not organizer
+    if (user.id !== group.organizerId) {
+        const members = await Membership.findAll({
+            where: {
+                groupId: id,
+                status: "member" || "co-host"
+            },
+            attributes: ["status"],
+            include: [
+                {
+                    model: User, attributes: ["id", "firstName", "lastName"]
+                },
+            ]
+        })
+
+        if (!members.length) {
+            return res.status(200).json({message: "No members in this group"})
+        }
+
+        return res.status(200).json(members)
+    }
+
+    //if user is organizer
+    const members = await Membership.findAll({
+        where: {
+            groupId: id,
+            status: "member" || "co-host" || "pending"
+        },
+        attributes: ["status"],
+        include: [
+            {
+                model: User, attributes: ["id", "firstName", "lastName"]
+            },
+        ]
+    })
+
+    if (!members.length) {
+        return res.status(200).json({message: "No members in this group"})
+    }
+
+    return res.status(200).json(members)
+})
+
+//request group membership
+router.post("/:id/membership", async (req,res,next) => {
+    const id = req.params.id
+    const {user} = req
+    const group = await Group.findByPk(id)
+
+    if (!user) {
+        const err = new Error("Must be logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    if (!group) {
+        const err = new Error(`No group with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    const request = await Membership.create({
+        groupId: group.id,
+        memberId: user.id,
+        status: "pending"
+    })
+
+    return res.status(200).json({message: "Success!", request})
+})
+
+//change membership
+router.put("/:id/membership", async (req,res,next) => {
+    const id = req.params.id
+    const {user} = req
+    const {memberId, status} = req.body
+
+    if (!user) {
+        const err = new Error("Must be logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    const cohost = await Membership.findAll({
+        where: {
+            groupId: id,
+            memberId: user.id,
+            status: "co-host"
+        }
+    })
+    const group = await Group.findByPk(id)
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (!cohost && user.id !== group.organizerId) {
+        const err = new Error("Must be organizer or co-host")
+        err.status = 400
+        return next(err)
+    }
+
+    
+    if (user.id !== group.organizerId && status === "co-host") {
+        const err = new Error("Must be organizer to add co-host")
+        err.status = 403
+        return next(err)
+    }
+
+    if (status === "pending") {
+        const err = new Error("Cannot set status to pending")
+        err.status = 400
+        return next(err)
+    }
+
+    const member = await Membership.findOne({
+        where: {
+            groupId: group.id,
+            memberId
+        }
+    })
+
+    if (!member) {
+        const err = new Error(`No member with id ${memberId}`)
+        err.status = 404
+        return next(err)
+    }
+
+    await member.set({
+        groupId: group.id,
+        memberId,
+        status
+    }) 
+
+    return res.status(200).json(member)
+})
+
+//delete membership
+router.delete("/:id/membership", async (req,res,next) => {
+    const id = req.params.id
+    const {user} = req
+
+    if (!user) {
+        const err = new Error("Must be logged in")
+        err.status = 400
+        return next(err)
+    }
+
+    const {memberId} = req.body
+    const member = await Membership.findOne({
+        where: {
+            groupId: id,
+            memberId
+        }
+    })
+
+    if (!member) {
+        const err = new Error(`No member with id ${memberId}`)
+        err.status = 404
+        return next(err)
+    }
+
+    const group = await Group.findByPk(id)
+
+    if (!group) {
+        const err = new Error(`Group does not exist with id ${id}`)
+        err.status = 404
+        return next(err)
+    }
+
+    if (user.id !== group.organizerId && user.id !== memberId) {
+        const err = new Error(`Only organizer or member can delete membership`)
+        err.status = 403
+        return next(err)
+    }
+
+    await member.destroy()
+
+    return res.status(200).json({message: "Success!"})
+})
 
 module.exports = router
