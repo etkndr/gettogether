@@ -1,6 +1,5 @@
 'use strict';
 const bcrypt = require("bcryptjs");
-const {User, EventImage, Group, Venue, Attendance} = require("../models")
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -10,18 +9,12 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    options.tableName = 'Events';
+    options.tableName = 'EventImages';
     return queryInterface.bulkInsert(options, [
       {
-        groupId: 1,
-        venueId: 1,
-        name: "Demo event",
-        type: "In person",
-        capacity: 100,
-        startDate: "2021-11-19 20:00:00",
-        endDate: "2021-11-20 20:00:00",
-        description: "Demo event for testing",
-        price: 18.50
+        eventId: 1,
+        url: "www.example.com/img.png",
+        preview: true
       },
     /**
      * Add seed commands here.
@@ -35,7 +28,7 @@ module.exports = {
     ])},
 
     async down (queryInterface, Sequelize) {
-      options.tableName = 'Events';
+      options.tableName = 'EventImages';
       const Op = Sequelize.Op;
       return queryInterface.bulkDelete(options, {});
     }
