@@ -1,0 +1,62 @@
+const express = require('express')
+const sequelize = require("sequelize")
+const {Op} = require("sequelize")
+const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
+const { Group, User, Membership, Venue, Event, EventImage, Attendance } = require('../../db/models');
+const router = express.Router();
+
+router.use(restoreUser)
+
+router.delete("/:id", async (req,res,next) => {
+    const id = req.params.id
+    const {user} = req
+    if (!user) {
+        const err = new Error("Must be logged in")
+        err.status = 400
+        return next(err)
+    }
+    
+    const img = await EventImage.findByPk(id)
+    if (!img) {
+        const err = new Error("No image exists")
+        err.status = 404
+        return next(err)
+    }
+
+    const event = await Event.findOne({
+        where: {
+            id: img.eventId
+        }
+    })
+
+    const group = await Group.findOne({
+        where: {
+            id: event.groupId
+        }
+    })
+    if (!group) {
+        const err = new Error("No group with id")
+        err.status = 404
+        return next(err)
+    }
+
+    const cohost = await Membership.findAll({
+        where: {
+            groupId: group.id,
+            memberId: user.id,
+            status: "co-host"
+        }
+    })
+    if (!cohost && user.id !== group.organizerId) {
+        const err = new Error("Must be organizer or co-host")
+        err.status = 403
+        return next(err)
+    }
+
+
+    await img.destroy()
+
+    return res.status(200).json({message: "Success!"})
+})
+
+module.exports = router

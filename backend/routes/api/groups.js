@@ -413,7 +413,10 @@ router.get("/:id/members", async (req,res,next) => {
         const members = await Membership.findAll({
             where: {
                 groupId: id,
-                status: "member" || "co-host"
+                [Op.or]: [
+                    { status: "member" },
+                    { status: "co-host" }
+                  ]
             },
             attributes: ["status"],
             include: [
@@ -433,8 +436,7 @@ router.get("/:id/members", async (req,res,next) => {
     //if user is organizer
     const members = await Membership.findAll({
         where: {
-            groupId: id,
-            status: "member" || "co-host" || "pending"
+            groupId: id
         },
         attributes: ["status"],
         include: [
