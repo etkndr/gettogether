@@ -9,7 +9,24 @@ router.use(restoreUser)
 
 //get all events
 router.get("/", async (req,res,next) => {
+    let {page, size, name, type, startDate} = req.query
+
+    if (!page || page < 1 || page > 10) {
+        page = 1
+    }
+
+    if (!size || size < 1 || size > 20) {
+        size = 20
+    }
+
     const events = await Event.findAll({
+        // where: {
+        //     name,
+        //     type,
+        //     startDate
+        // },
+        // offset: size * (page - 1),
+        // limit: size,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -29,7 +46,7 @@ router.get("/", async (req,res,next) => {
                 model: EventImage, attributes: ["preview"]
             }
     ],
-        group: ["Event.id"]
+        group: ["Event.id"],
     })
 
     res.status(200).json(events)
@@ -62,7 +79,7 @@ router.get("/:id", async (req,res,next) => {
     })
 
     if (!event) {
-        const err = new Error(`No event with id ${id}`)
+        const err = new Error(`Event couldn't be found`)
         err.status = 404
         return next(err)
     }
@@ -77,20 +94,20 @@ router.post("/:id/images", async (req,res,next) => {
     const {user} = req
     const attend = await Attendance.findAll({
         where: {
-            eventId: id,
+            eventId: event.id,
             userId: user.id
         }
     })
     const {url, preview} = req.body
 
     if (!user) {
-        const err = new Error(`Must be logged in`)
-        err.status = 400
+        const err = new Error(`Authentication required`)
+        err.status = 401
         return next(err)
     }
 
     if (!event) {
-        const err = new Error(`No event with id ${id}`)
+        const err = new Error(`Event couldn't be found`)
         err.status = 404
         return next(err)
     }
@@ -101,11 +118,13 @@ router.post("/:id/images", async (req,res,next) => {
         return next(err)
     }
 
-    const img = await EventImage.create({
-        eventId: id,
+    const newImg = await EventImage.create({
+        eventId: event.id,
         url,
         preview
     })
+
+    const img = await EventImage.findByPk(newImg.id)
 
     return res.status(200).json(img)
 })
@@ -136,15 +155,15 @@ router.put("/:id", async (req,res,next) => {
 
     
     if (!user) {
-        const err = new Error(`Must be logged in`)
-        err.status = 400
+        const err = new Error(`Authentication required`)
+        err.status = 401
         return next(err)
     }
     
     
     if (user.id !== group.organizerId && !cohost) {
-        const err = new Error(`Must be group organizer or co-host`)
-        err.status = 400
+        const err = new Error(`Forbidden`)
+        err.status = 403
         return next(err)
     }
     
@@ -196,15 +215,15 @@ router.delete("/:id", async (req,res,next) => {
     })
 
     if (!user) {
-        const err = new Error(`Must be logged in`)
-        err.status = 400
+        const err = new Error(`Authentication required`)
+        err.status = 401
         return next(err)
     }
 
 
     if (user.id !== group.organizerId && !cohost) {
-        const err = new Error(`Must be group organizer or co-host`)
-        err.status = 400
+        const err = new Error(`Forbidden`)
+        err.status = 403
         return next(err)
     }
 
@@ -278,8 +297,8 @@ router.post("/:id/attendance", async (req,res,next) => {
     const id = req.params.id
     const {user} = req
     if (!user) {
-        const err = new Error("Must be logged in")
-        err.status = 400
+        const err = new Error("Authentication required")
+        err.status = 401
         return next(err)
     }
     
@@ -322,8 +341,8 @@ router.put("/:id/attendance", async (req,res,next) => {
 
     const {user} = req
     if (!user) {
-        const err = new Error("Must be logged in")
-        err.status = 400
+        const err = new Error("Authentication required")
+        err.status = 401
         return next(err)
     }
 
@@ -349,7 +368,7 @@ router.put("/:id/attendance", async (req,res,next) => {
     })
 
     if (!cohost && user.id !== group.organizerId) {
-        const err = new Error("Must be organizer or co-host")
+        const err = new Error("Forbidden")
         err.status = 403
         return next(err)
     }
@@ -382,8 +401,8 @@ router.delete("/:id/attendance", async (req,res,next) => {
     const {memberId} = req.body
     const {user} = req
     if (!user) {
-        const err = new Error("Must be logged in")
-        err.status = 400
+        const err = new Error("Authentication required")
+        err.status = 401
         return next(err)
     }
 
@@ -418,7 +437,7 @@ router.delete("/:id/attendance", async (req,res,next) => {
     }
 
     if (user.id !== group.organizerId && user.id !== memberId) {
-        const err = new Error("Must be organizer or member who requested")
+        const err = new Error("Forbidden")
         err.status = 403
         return next(err)
     }

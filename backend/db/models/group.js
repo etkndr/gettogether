@@ -29,15 +29,33 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: {
+          args: [1, 60],
+          msg: "Name must be 60 characters or less"
+        }
+      }
     },
     about: {
       type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [50, 100000],
+          msg: "About must be 50 characters or more"
+        }
+      }
     },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "In person"
+      validate: {
+        type(val) {
+          if (val !== "Online" && val !== "In person") {
+            throw new Error ("Type must be 'Online' or 'In person'")
+          }
+        }
+      }
     },
     private: {
       type: DataTypes.BOOLEAN,
@@ -46,14 +64,22 @@ module.exports = (sequelize, DataTypes) => {
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "City is required"
+        }
+      }
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         len: [2,2],
-        isUppercase: true
+        isUppercase: true,
+        notNull: {
+          msg: "State is required"
+        }
       }
     },
   }, {

@@ -26,20 +26,20 @@ router.put("/:id", async (req,res,next) => {
     })
 
     if (!venue) {
-        const err = new Error(`No venue with id ${id}`)
+        const err = new Error(`Venue couldn't be found`)
         err.status = 404
         return next(err)
     }
 
     if (!user) {
-        const err = new Error(`Not logged in`)
-        err.status = 400
+        const err = new Error(`Authentication required`)
+        err.status = 401
         return next(err)
     }
 
     if (!cohost || user.id !== group.organizerId) {
-        const err = new Error("Only group organizer or co-host can edit a venue")
-        err.status = 400
+        const err = new Error("Forbidden")
+        err.status = 403
         return next(err)
     }
 

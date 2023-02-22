@@ -11,7 +11,7 @@ router.delete("/:id", async (req,res,next) => {
     const id = req.params.id
     const {user} = req
     if (!user) {
-        const err = new Error("Must be logged in")
+        const err = new Error("Authentication required")
         err.status = 400
         return next(err)
     }

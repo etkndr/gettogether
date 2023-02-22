@@ -33,39 +33,85 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: {
+          args: [5,100000],
+          msg: "Name must be at least 5 characters"
+        }
+      }
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        type(val) {
+          if (val !== "Online" && val !== "In person") {
+            throw new Error ("Type must be 'Online' or 'In person'")
+          }
+        }
+      }
     },
     capacity: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isInt: {
+          msg: "Capacity must be an integer"
+        }
+      }
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        start(val) {
+          if (val < Date.now()) {
+            throw new Error("Start date must be in the future")
+          }
+        }
+      }
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Description is required"
+        }
+      }
+
     },
     price: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: {
+          args: [4,4],
+          msg: "Price is invalid"
+        }
+      }
     },
-  }, {
-    sequelize,
-    modelName: 'Event'
+  },
+  {
+      sequelize,
+      validate: {
+        date() {
+          if (this.startDate > this.endDate) {
+            throw new Error("End date is less than start date")
+          }
+        }
+      },
+    modelName: 'Event',
   });
 
   Event.addScope("defaultScope", {
     attributes: {
-    exclude: ["eventId"]
+    exclude: ["eventId", "createdAt", "updatedAt"]
     }
   })
   return Event;
