@@ -18,7 +18,7 @@ router.delete("/:id", async (req,res,next) => {
     
     const img = await EventImage.findByPk(id)
     if (!img) {
-        const err = new Error("No image exists")
+        const err = new Error("Event image couldn't be found")
         err.status = 404
         return next(err)
     }
@@ -35,7 +35,7 @@ router.delete("/:id", async (req,res,next) => {
         }
     })
     if (!group) {
-        const err = new Error("No group with id")
+        const err = new Error("Group couldn't be found")
         err.status = 404
         return next(err)
     }
@@ -48,7 +48,7 @@ router.delete("/:id", async (req,res,next) => {
         }
     })
     if (!cohost && user.id !== group.organizerId) {
-        const err = new Error("Must be organizer or co-host")
+        const err = new Error("Forbidden")
         err.status = 403
         return next(err)
     }
@@ -56,7 +56,7 @@ router.delete("/:id", async (req,res,next) => {
 
     await img.destroy()
 
-    return res.status(200).json({message: "Success!"})
+    return res.status(200).json({message: "Successfully deleted"})
 })
 
 module.exports = router

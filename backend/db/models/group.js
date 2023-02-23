@@ -60,7 +60,14 @@ module.exports = (sequelize, DataTypes) => {
     private: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: true,
+      validate: {
+        isBool(val) {
+          if (typeof val !== "boolean") {
+            throw new Error("Private must be a boolean")
+          }
+        }
+      }
     },
     city: {
       type: DataTypes.STRING,

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Attendance.belongsTo(models.Event, {foreignKey: "eventId"})
-      Attendance.belongsTo(models.User, {foreignKey: "userId"})
+      Attendance.belongsTo(models.User, {foreignKey: "userId", as: "Attendee"})
     }
   }
   Attendance.init({
@@ -35,5 +35,17 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Attendance',
   });
+
+  Attendance.addScope("defaultScope", {
+    attributes: {
+      exclude: ["updatedAt", "createdAt"]
+    }
+  })
+
+  Attendance.addScope("submission", {
+    attributes: {
+      exclude: ["id", "eventId", "updatedAt", "createdAt"]
+    }
+  })
   return Attendance;
 };

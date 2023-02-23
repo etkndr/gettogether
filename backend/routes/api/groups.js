@@ -2,7 +2,7 @@ const express = require('express')
 const sequelize = require("sequelize")
 const { setTokenCookie, requireAuth, restoreUser } = require('../../utils/auth');
 const { Group, User, Membership, GroupImage, Venue, Event, Attendance, EventImage } = require('../../db/models');
-const { or } = require('sequelize');
+const { Op } = require('sequelize');
 const router = express.Router();
 
 router.use(restoreUser)
@@ -187,7 +187,7 @@ router.put("/:id", async (req,res,next) => {
     }
 
 
-    group.set({
+    group.update({
         organizerId: user.id,
         name,
         about,
@@ -429,7 +429,7 @@ router.get("/:id/members", async (req,res,next) => {
             attributes: ["status"],
             include: [
                 {
-                    model: User, attributes: ["id", "firstName", "lastName"]
+                    model: User, as: "Member", attributes: ["id", "firstName", "lastName"]
                 },
             ]
         })
@@ -449,7 +449,7 @@ router.get("/:id/members", async (req,res,next) => {
         attributes: ["status"],
         include: [
             {
-                model: User, attributes: ["id", "firstName", "lastName"]
+                model: User, as: "Member", attributes: ["id", "firstName", "lastName"]
             },
         ]
     })
@@ -474,18 +474,47 @@ router.post("/:id/membership", async (req,res,next) => {
     }
 
     if (!group) {
-        const err = new Error(`No group with id ${id}`)
+        const err = new Error(`Group couldn't be found`)
         err.status = 404
         return next(err)
     }
 
-    const request = await Membership.create({
+    const pending = await Membership.findOne({
+        where: {
+            groupId: group.id,
+            memberId: user.id,
+            status: "pending"
+        }
+    })
+
+    if (pending) {
+        const err = new Error("Membership has already been requested")
+        err.status = 400
+        return next(err)
+    }
+
+    const member = await Membership.findOne({
+        where: {
+            groupId: group.id,
+            memberId: user.id
+        }
+    })
+
+    if (member) {
+        const err = new Error("User is already a member of the group")
+        err.status = 400
+        return next(err)
+    }
+
+    const newRequest = await Membership.create({
         groupId: group.id,
         memberId: user.id,
         status: "pending"
     })
 
-    return res.status(200).json({message: "Success!", request})
+    const request = await Membership.scope("submission").findByPk(newRequest.id)
+
+    return res.status(200).json(request)
 })
 
 //change membership
@@ -497,6 +526,14 @@ router.put("/:id/membership", async (req,res,next) => {
     if (!user) {
         const err = new Error("Authentication required")
         err.status = 401
+        return next(err)
+    }
+
+    const checkId = await User.findByPk(memberId)
+
+    if (!checkId) {
+        const err = new Error("User couldn't be found")
+        err.status = 404
         return next(err)
     }
 
@@ -529,7 +566,7 @@ router.put("/:id/membership", async (req,res,next) => {
     }
 
     if (status === "pending") {
-        const err = new Error("Cannot set status to pending")
+        const err = new Error("Cannot change a membership status to pending")
         err.status = 400
         return next(err)
     }
@@ -542,12 +579,12 @@ router.put("/:id/membership", async (req,res,next) => {
     })
 
     if (!member) {
-        const err = new Error(`No member with id ${memberId}`)
+        const err = new Error(`Membership between the user and the group does not exits`)
         err.status = 404
         return next(err)
     }
 
-    await member.set({
+    member.update({
         groupId: group.id,
         memberId,
         status
@@ -567,20 +604,29 @@ router.delete("/:id/membership", async (req,res,next) => {
         return next(err)
     }
 
+    
     const {memberId} = req.body
+    
+    const checkId = await User.findByPk(memberId)
+    if (!checkId) {
+        const err = new Error("User couldn't be found")
+        err.status = 404
+        return next(err)
+    }
+
     const member = await Membership.findOne({
         where: {
             groupId: id,
             memberId
         }
     })
-
+    
     if (!member) {
-        const err = new Error(`No member with id ${memberId}`)
+        const err = new Error(`Membership does not exist for this User`)
         err.status = 404
         return next(err)
     }
-
+    
     const group = await Group.findByPk(id)
 
     if (!group) {
@@ -597,7 +643,7 @@ router.delete("/:id/membership", async (req,res,next) => {
 
     await member.destroy()
 
-    return res.status(200).json({message: "Success!"})
+    return res.status(200).json({message: "Successfully deleted membership from group"})
 })
 
 module.exports = router

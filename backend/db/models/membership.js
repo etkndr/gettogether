@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Membership.belongsTo(models.User, {foreignKey: "memberId"})
+      Membership.belongsTo(models.User, {foreignKey: "memberId", as: "Member"})
       Membership.belongsTo(models.Group, {foreignKey: "groupId"})
     }
   }
@@ -36,5 +36,17 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Membership',
   });
+
+  Membership.addScope("defaultScope", {
+    attributes: {
+      exclude: ["createdAt", "updatedAt"]
+    }
+  })
+
+  Membership.addScope("submission", {
+    attributes: {
+      exclude: ["id", "groupId", "createdAt", "updatedAt"]
+    }
+  })
   return Membership;
 };

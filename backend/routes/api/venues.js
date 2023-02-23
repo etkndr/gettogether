@@ -49,7 +49,7 @@ router.put("/:id", async (req,res,next) => {
         return next(err)
     }
 
-    venue.set({
+    venue.update({
         address,
         city,
         state,
