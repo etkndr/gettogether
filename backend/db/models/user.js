@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       User.hasMany(models.Group, {foreignKey: "organizerId", as: "organizer"})
-      User.hasMany(models.Membership, {foreignKey: "userId"})
+      User.hasMany(models.Membership, {foreignKey: "memberId"})
       User.hasMany(models.Attendance, {foreignKey: "userId"})
     }
   }
@@ -72,9 +72,12 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: {
+          msg: "User with that email already exists"
+        },
         validate: {
           len: [3, 256],
-          isEmail: true
+          isEmail: true,
         }
       },
       password: {

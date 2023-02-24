@@ -21,31 +21,69 @@ module.exports = (sequelize, DataTypes) => {
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Street address is required"
+        }
+      }
     },
     city: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "City is required"
+        }
+      }
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
+        notNull: {
+          msg: "State is required"
+        },
         len: [2,2],
         isUppercase: true
       }
     },
     lat: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: {
+          args: [-90],
+          msg: "Latitude is not valid"
+        },
+        max: {
+          args: [90],
+          msg: "Latitude is not valid"
+        },
+      }
     },
     lng: {
       type: DataTypes.DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: {
+          args: [-180],
+          msg: "Longitude is not valid"
+        },
+        max: {
+          args: [180],
+          msg: "Longitude is not valid"
+        },
+      }
     },
   }, {
     sequelize,
     modelName: 'Venue',
+    defaultScope: {
+      attributes: {
+        exclude: ["createdAt", "updatedAt"]
+      }
+    }
   });
   return Venue;
 };
