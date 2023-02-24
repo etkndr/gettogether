@@ -45,15 +45,34 @@ router.get("/", async (req,res,next) => {
         where.startDate = startDate
     }
 
-    if (size && size >= 1 && size >= 20) {
+    if (size && size < 1) {
+        const err = new Error("Size must be greater than or equal to 1")
+        err.status = 400
+        return next(err)
+    }
+
+    if (page && page < 1) {
+        const err = new Error("Page must be greater than or equal to 1")
+        err.status = 400
+        return next(err)
+    }
+
+    if (size && (size >= 1 || size <= 20)) {
         limit = size
     } else {
         limit = 20
     }
 
+    if (page && (page >= 1 || page <= 10)) {
+        offset = limit * (page - 1)
+    } else {
+        offset = 0
+    }
+
 
     const events = await Event.findAll({
         where,
+        subQuery: false,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -74,7 +93,8 @@ router.get("/", async (req,res,next) => {
             }
     ],
         group: ["Event.id"],
-        // limit: limit
+        limit,
+        offset
     })
     res.status(200).json(events)
 })
