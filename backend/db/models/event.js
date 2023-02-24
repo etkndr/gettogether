@@ -65,6 +65,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       validate: {
+        isDate: {
+          msg: "Start date must be a valid datetime"
+        },
         start(val) {
           if (val < Date.now()) {
             throw new Error("Start date must be in the future")

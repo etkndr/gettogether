@@ -9,28 +9,55 @@ router.use(restoreUser)
 
 //get all events
 router.get("/", async (req,res,next) => {
+    const where = {}
+    let limit
+    let offset
     let {page, size, name, type, startDate} = req.query
 
-    if (!page || page < 1 || page > 10) {
-        page = 1
+    if (name) {
+        if (parseInt(name)) {
+            const err = new Error("Name must be a string")
+            err.status = 400
+            return next(err)
+        }
+
+        where.name = name
     }
 
-    if (!size || size < 1 || size > 20) {
-        size = 20
+    if (type) {
+        if (type !== "Online" && type !== "In person") {
+            const err = new Error("Type must be 'Online' or 'In person'")
+            err.status = 400
+            return next(err)
+        }
+
+        where.type = type
     }
+
+    
+    if (startDate) {
+        const date = Date.parse(startDate)
+        if (isNaN(date)) {
+            const err = new Error("Start date must be a valid datetime")
+            err.status = 400
+            return next(err)
+        }
+        where.startDate = startDate
+    }
+
+    if (size && size >= 1 && size >= 20) {
+        limit = size
+    } else {
+        limit = 20
+    }
+
 
     const events = await Event.findAll({
-        // where: {
-        //     name,
-        //     type,
-        //     startDate
-        // },
-        // offset: size * (page - 1),
-        // limit: size,
+        where,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
-            ] 
+            ]
         },
         include: [
             {
@@ -47,8 +74,8 @@ router.get("/", async (req,res,next) => {
             }
     ],
         group: ["Event.id"],
+        // limit: limit
     })
-
     res.status(200).json(events)
 })
 

@@ -114,7 +114,7 @@ module.exports = (sequelize, DataTypes) => {
             id: imgId
           },
           include: [
-            {model: GroupImage}
+            {model: GroupImage, attributes: {exclude: ["groupId", "createdAt", "updatedAt"]}}
           ]
         }
       }

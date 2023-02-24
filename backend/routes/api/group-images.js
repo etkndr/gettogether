@@ -18,7 +18,7 @@ router.delete("/:id", async (req,res,next) => {
     
     const img = await GroupImage.findByPk(id)
     if (!img) {
-        const err = new Error("Group Image couldn't be found")
+        const err = new Error("Group image couldn't be found")
         err.status = 404
         return next(err)
     }
