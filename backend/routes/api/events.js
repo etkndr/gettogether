@@ -92,7 +92,7 @@ router.get("/", async (req,res,next) => {
                 model: EventImage, attributes: ["preview"]
             }
     ],
-        group: ["Event.id"],
+        group: ["Event.id", "Group.id"],
         limit,
         offset
     })
