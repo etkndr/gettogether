@@ -75,12 +75,12 @@ router.get("/", async (req,res,next) => {
         subQuery:false,
         attributes: { 
             include: [
-                [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
+                [sequelize.fn("COUNT", sequelize.col("numAttending.id")), "numAttending"],
             ]
         },
         include: [
             {
-                model: Attendance, attributes: [], duplicating: false
+                model: Attendance, as: "numAttending", attributes: [], duplicating: false
             },
             {
                 model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
@@ -92,7 +92,7 @@ router.get("/", async (req,res,next) => {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"],
+        group: ["Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
         limit,
         offset
     })
@@ -112,7 +112,7 @@ router.get("/:id", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: [], duplicating: false
+                model: Attendance, as: "numAttending", attributes: [], duplicating: false
             },
             {
                 model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
@@ -124,9 +124,7 @@ router.get("/:id", async (req,res,next) => {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"],
-        limit,
-        offset
+        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"]
     })
 
     if (!event) {
