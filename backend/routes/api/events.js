@@ -105,36 +105,27 @@ router.get("/", async (req,res,next) => {
 router.get("/:id", async (req,res,next) => {
     const id = req.params.id
     const event = await Event.findByPk(id, {
-        attributes: {
+        subQuery:false,
+        attributes: { 
             include: [
-              [
-                sequelize.fn('COUNT', sequelize.col('Attendances.id')),
-                'numAttending',
-              ],
-            ],
-          },
-          include: [
+                [sequelize.fn("COUNT", sequelize.col("numAttending.id")), "numAttending"],
+            ]
+        },
+        include: [
             {
-              model: Attendance,
-              attributes: [],
-              duplicating: false,
+                model: Attendance, as: "numAttending", attributes: [], duplicating: false
             },
             {
-              model: Group,
-              attributes: ['id', 'name', 'city', 'state'],
-              duplicating: false,
+                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
             },
             {
-              model: Venue,
-              attributes: ['id', 'city', 'state'],
-              duplicating: false,
+                model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
-              model: EventImage,
-              attributes: ['id', 'preview'],
-            },
-          ],
-          group: ['Event.id', 'EventImages.id', 'Group.id', 'Venue.id'],
+                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
+            }
+    ],
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
     })
 
     if (!event) {
