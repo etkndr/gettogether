@@ -72,9 +72,7 @@ router.get("/", async (req,res,next) => {
 
     const events = await Event.findAll({
         where,
-        subQuery: false,
-        duplicating: false,
-        required: true,
+        subQuery:false,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -82,19 +80,19 @@ router.get("/", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: [], subQuery: false, required: true, duplicating: false
+                model: Attendance, attributes: []
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"], subQuery: false, required: true, duplicating: false
+                model: Group, attributes: ["id", "name", "city", "state"]
             },
             {
-                model: Venue, attributes: ["id", "city", "state"], subQuery: false, required: true, duplicating: false
+                model: Venue, attributes: ["id", "city", "state"]
             },
             {
-                model: EventImage, attributes: ["preview"], subQuery: false, required: true, duplicating: false
+                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"],
+        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"],
         limit,
         offset
     })
@@ -104,30 +102,31 @@ router.get("/", async (req,res,next) => {
 //get event by id
 router.get("/:id", async (req,res,next) => {
     const id = req.params.id
-    const event = await Event.findByPk(id, {
-        subQuery: false,
-        duplicating: false,
-        required: true,
+    const events = await Event.findAll({
+        where,
+        subQuery:false,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
-            ] 
+            ]
         },
         include: [
             {
-                model: Attendance, attributes: [], subQuery: false, required: true, duplicating: false
+                model: Attendance, attributes: []
             },
             {
-                model: Group, attributes: ["id", "name", "private", "city", "state"], subQuery: false, required: true, duplicating: false 
+                model: Group, attributes: ["id", "name", "city", "state"]
             },
             {
-                model: Venue, attributes: ["id", "address", "city", "state", "lat", "lng"], subQuery: false, required: true, duplicating: false
+                model: Venue, attributes: ["id", "city", "state"]
             },
             {
-                model: EventImage, attributes: ["id", "url", "preview"], subQuery: false, required: true, duplicating: false
+                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"]
+        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"],
+        limit,
+        offset
     })
 
     if (!event) {
