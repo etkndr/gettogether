@@ -96,34 +96,45 @@ router.get("/", async (req,res,next) => {
         limit,
         offset
     })
-    return res.status(200).json(events)
+  
+    return res.status(200).json(events);
+
 })
 
 //get event by id
 router.get("/:id", async (req,res,next) => {
     const id = req.params.id
     const event = await Event.findByPk(id, {
-        subQuery:false,
-        attributes: { 
+        attributes: {
             include: [
-                [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
-            ]
-        },
-        include: [
+              [
+                sequelize.fn('COUNT', sequelize.col('Attendances.id')),
+                'numAttending',
+              ],
+            ],
+          },
+          include: [
             {
-                model: Attendance, as: "numAttending", attributes: [], duplicating: false
+              model: Attendance,
+              attributes: [],
+              duplicating: false,
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
+              model: Group,
+              attributes: ['id', 'name', 'city', 'state'],
+              duplicating: false,
             },
             {
-                model: Venue, attributes: ["id", "city", "state"], duplicating: false
+              model: Venue,
+              attributes: ['id', 'city', 'state'],
+              duplicating: false,
             },
             {
-                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
-            }
-    ],
-        group: ["Event.id", "Group.id", "Attendance.id", "Venue.id", "EventImage.id"]
+              model: EventImage,
+              attributes: ['id', 'preview'],
+            },
+          ],
+          group: ['Event.id', 'EventImages.id', 'Group.id', 'Venue.id'],
     })
 
     if (!event) {
