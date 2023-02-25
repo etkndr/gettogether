@@ -313,26 +313,27 @@ router.get("/:id/events", async (req,res,next) => {
         where: {
             groupId: id
         },
+        subQuery:false,
         attributes: { 
             include: [
-                [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
-            ] 
+                [sequelize.fn("COUNT", sequelize.col("numAttending.id")), "numAttending"],
+            ]
         },
         include: [
             {
-                model: Attendance, attributes: []
+                model: Attendance, as: "numAttending", attributes: [], duplicating: false
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"]
+                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
             },
             {
-                model: Venue, attributes: ["id", "city", "state"]
+                model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
-                model: EventImage, attributes: ["preview"]
+                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["Event.id"]
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
     })
 
     if (!group) {
