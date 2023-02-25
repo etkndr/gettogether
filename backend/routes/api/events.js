@@ -80,13 +80,13 @@ router.get("/", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: []
+                model: Attendance, attributes: [], duplicating: false
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"]
+                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
             },
             {
-                model: Venue, attributes: ["id", "city", "state"]
+                model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
@@ -112,13 +112,13 @@ router.get("/:id", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: []
+                model: Attendance, attributes: [], duplicating: false
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"]
+                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
             },
             {
-                model: Venue, attributes: ["id", "city", "state"]
+                model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
