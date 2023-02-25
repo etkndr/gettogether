@@ -81,7 +81,6 @@ router.get("/", async (req,res,next) => {
             ]
         },
         include: [
-            {duplicating: false},
             {
                 model: Attendance, attributes: [], required: true, duplicating: false
             },
@@ -115,7 +114,6 @@ router.get("/:id", async (req,res,next) => {
             ] 
         },
         include: [
-            {duplicating: false},
             {
                 model: Attendance, attributes: [], required: true, duplicating: false
             },
