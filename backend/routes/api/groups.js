@@ -429,7 +429,7 @@ router.get("/:id/members", async (req,res,next) => {
             attributes: ["status"],
             include: [
                 {
-                    model: User, as: "Member", attributes: ["id", "firstName", "lastName"]
+                    model: User, attributes: ["id", "firstName", "lastName"]
                 },
             ]
         })
@@ -449,7 +449,7 @@ router.get("/:id/members", async (req,res,next) => {
         attributes: ["status"],
         include: [
             {
-                model: User, as: "Member", attributes: ["id", "firstName", "lastName"]
+                model: User, attributes: ["id", "firstName", "lastName"]
             },
         ]
     })
