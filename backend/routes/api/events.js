@@ -80,16 +80,16 @@ router.get("/", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, required: true, duplicating: false, attributes: []
+                model: Attendance, attributes: [], required: true, duplicating: false
             },
             {
-                model: Group, required: true, duplicating: false, attributes: ["id", "name", "city", "state"]
+                model: Group, attributes: ["id", "name", "city", "state"], required: true, duplicating: false
             },
             {
-                model: Venue, required: true, duplicating: false, attributes: ["id", "city", "state"]
+                model: Venue, attributes: ["id", "city", "state"], required: true, duplicating: false
             },
             {
-                model: EventImage, required: true, duplicating: false, attributes: ["preview"]
+                model: EventImage, attributes: ["preview"], required: true, duplicating: false
             }
     ],
         group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"],
@@ -111,16 +111,16 @@ router.get("/:id", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, required: true, duplicating: false, attributes: []
+                model: Attendance, attributes: [], required: true, duplicating: false
             },
             {
-                model: Group, required: true, duplicating: false, attributes: ["id", "name", "private", "city", "state"]
+                model: Group, attributes: ["id", "name", "private", "city", "state"], required: true, duplicating: false 
             },
             {
-                model: Venue, required: true, duplicating: false, attributes: ["id", "address", "city", "state", "lat", "lng"]
+                model: Venue, attributes: ["id", "address", "city", "state", "lat", "lng"], required: true, duplicating: false
             },
             {
-                model: EventImage, required: true, duplicating: false, attributes: ["id", "url", "preview"]
+                model: EventImage, attributes: ["id", "url", "preview"], required: true, duplicating: false
             }
     ],
         group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"]
