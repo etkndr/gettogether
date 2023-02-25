@@ -54,7 +54,7 @@ router.delete(
 router.get(
     '/',
     restoreUser,
-    (req, res) => {
+    (req, res, next) => {
       const { user } = req;
       if (user) {
         return res.json({
