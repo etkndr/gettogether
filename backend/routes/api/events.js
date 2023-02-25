@@ -92,7 +92,7 @@ router.get("/", async (req,res,next) => {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
         limit,
         offset
     })
@@ -102,8 +102,7 @@ router.get("/", async (req,res,next) => {
 //get event by id
 router.get("/:id", async (req,res,next) => {
     const id = req.params.id
-    const events = await Event.findAll({
-        where,
+    const event = await Event.findByPk(id, {
         subQuery:false,
         attributes: { 
             include: [
@@ -124,7 +123,7 @@ router.get("/:id", async (req,res,next) => {
                 model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
             }
     ],
-        group: ["Group.id", "Attendance.id", "Venue.id", "EventImage.id"]
+        group: ["Event.id", "Group.id", "Attendance.id", "Venue.id", "EventImage.id"]
     })
 
     if (!event) {
