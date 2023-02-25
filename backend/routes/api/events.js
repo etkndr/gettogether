@@ -73,6 +73,8 @@ router.get("/", async (req,res,next) => {
     const events = await Event.findAll({
         where,
         subQuery: false,
+        duplicating: false,
+        required: true,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -104,6 +106,8 @@ router.get("/:id", async (req,res,next) => {
     const id = req.params.id
     const event = await Event.findByPk(id, {
         subQuery: false,
+        duplicating: false,
+        required: true,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -128,6 +132,18 @@ router.get("/:id", async (req,res,next) => {
 
     if (!event) {
         const err = new Error(`Event couldn't be found`)
+        err.status = 404
+        return next(err)
+    }
+
+    const group = await Group.findOne({
+        where: {
+            id: event.groupId
+        }
+    })
+
+    if (!group) {
+        const err = new Error("Group couldn't be found")
         err.status = 404
         return next(err)
     }
