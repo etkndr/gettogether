@@ -80,29 +80,30 @@ router.get("/", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: []
+                model: Attendance, required: true, duplicating: false, attributes: []
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"]
+                model: Group, required: true, duplicating: false, attributes: ["id", "name", "city", "state"]
             },
             {
-                model: Venue, attributes: ["id", "city", "state"]
+                model: Venue, required: true, duplicating: false, attributes: ["id", "city", "state"]
             },
             {
-                model: EventImage, attributes: ["preview"]
+                model: EventImage, required: true, duplicating: false, attributes: ["preview"]
             }
     ],
         group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"],
         limit,
         offset
     })
-    res.status(200).json(events)
+    return res.status(200).json(events)
 })
 
 //get event by id
 router.get("/:id", async (req,res,next) => {
     const id = req.params.id
     const event = await Event.findByPk(id, {
+        subQuery: false,
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("Attendances.id")), "numAttending"],
@@ -110,16 +111,16 @@ router.get("/:id", async (req,res,next) => {
         },
         include: [
             {
-                model: Attendance, attributes: []
+                model: Attendance, required: true, duplicating: false, attributes: []
             },
             {
-                model: Group, attributes: ["id", "name", "private", "city", "state"]
+                model: Group, required: true, duplicating: false, attributes: ["id", "name", "private", "city", "state"]
             },
             {
-                model: Venue, attributes: ["id", "address", "city", "state", "lat", "lng"]
+                model: Venue, required: true, duplicating: false, attributes: ["id", "address", "city", "state", "lat", "lng"]
             },
             {
-                model: EventImage, attributes: ["id", "url", "preview"]
+                model: EventImage, required: true, duplicating: false, attributes: ["id", "url", "preview"]
             }
     ],
         group: ["EventImage.id", "Group.id", "Event.id", "Venue.id"]
