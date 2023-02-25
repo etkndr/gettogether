@@ -10,7 +10,7 @@ router.use(restoreUser)
 router.put("/:id", async (req,res,next) => {
     const {user} = req
     const id = req.params.id
-    const venue = await Venue.getByPk(id)
+    const venue = await Venue.findByPk(id)
     const {address, city, state, lat, lng} = req.body
     const group = await Group.findAll({
         where: {
