@@ -389,7 +389,7 @@ router.post("/:id/events", async (req,res,next) => {
         return next(err)
     }
 
-    const event = await Event.create({
+    const newEvent = await Event.create({
         groupId: id,
         venueId,
         name, 
@@ -400,6 +400,8 @@ router.post("/:id/events", async (req,res,next) => {
         description, 
         price
     })
+
+    const event = await Event.findByPk(newEvent.id)
 
     return res.status(200).json(event)
 })
@@ -437,6 +439,8 @@ router.get("/:id/members", async (req,res,next) => {
         if (!members.length) {
             return res.status(200).json({message: "No members in this group"})
         }
+
+        console.log(members)
 
         return res.status(200).json(members)
     }
@@ -538,11 +542,11 @@ router.put("/:id/membership", async (req,res,next) => {
     }
 
     const cohost = await Membership.findAll({
-        where: {
-            groupId: id,
-            memberId: user.id,
-            status: "co-host"
-        }
+        // where: {
+        //     groupId: id,
+        //     memberId: user.id,
+        //     status: "co-host"
+        // }
     })
     const group = await Group.findByPk(id)
 
