@@ -69,7 +69,6 @@ router.get("/", async (req,res,next) => {
         offset = 0
     }
 
-
     const events = await Event.findAll({
         where,
         subQuery:false,
@@ -96,6 +95,8 @@ router.get("/", async (req,res,next) => {
         limit,
         offset
     })
+
+    console.log(limit, offset)
   
     return res.status(200).json(events);
 
@@ -311,6 +312,7 @@ router.get("/:id/attendees", async (req,res,next) => {
         }
     })
 
+    if (user) {
     const cohost = await Membership.findAll({
         where: {
             groupId: group.id,
@@ -318,39 +320,38 @@ router.get("/:id/attendees", async (req,res,next) => {
             status: "co-host"
         }
     })
+}
 
     //not organizer/co-host
-    if (user.id !== group.organizerId && !cohost) {
-        const attend = await Attendance.findAll({
-            where: {
-                eventId: event.id,
-                [Op.or]: [
-                    { status: "member" },
-                    { status: "waitlist" }
-                ]
-            },
-            attributes: ["status"],
-            include: [
-                {
-                    model: User, attributes: ["id", "firstName", "lastName"]
-                }
-            ]
+    if (!user || user.id !== group.organizerId && !cohost) {
+        const attend = await User.findAll({
+            attributes: ["id", "firstName", "lastName"],
+            include: [{
+                model: Attendance, 
+                where: {
+                    eventId: event.id,
+                    [Op.or]: [
+                        { status: "member" },
+                        { status: "waitlist" }
+                    ]
+                },
+                attributes: ["status"]
+            }]
         })
 
         return res.status(200).json(attend)
     }
 
     //organizer/co-host
-    const attend = await Attendance.findAll({
-        where: {
-            eventId: event.id,
-        },
-        attributes: ["status"],
-        include: [
-            {
-                model: User, attributes: ["id", "firstName", "lastName"]
-            }
-        ]
+    const attend = await User.findAll({
+        attributes: ["id", "firstName", "lastName"],
+        include: [{
+            model: Attendance, 
+            where: {
+                eventId: event.id
+            },
+            attributes: ["status"]
+        }]
     })
 
 

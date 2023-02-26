@@ -426,44 +426,50 @@ router.get("/:id/members", async (req,res,next) => {
         return next(err)
     }
 
-    //if user is not organizer
-    if (user.id !== group.organizerId) {
-        const members = await Membership.findAll({
+    if (user) {
+        const cohost = await Membership.findAll({
             where: {
-                groupId: id,
-                [Op.or]: [
-                    { status: "member" },
-                    { status: "co-host" }
-                  ]
-            },
-            attributes: ["status"],
-            include: [
-                {
-                    model: User, attributes: ["id", "firstName", "lastName"]
+                groupId: group.id,
+                memberId: user.id,
+                status: "co-host"
+            }
+        })
+    }
+
+    //if user is not organizer
+    if (!user || user.id !== group.organizerId && !cohost) {
+        const members = await User.findAll({
+            attributes: ["id", "firstName", "lastName"],
+            include: [{
+                model: Membership, 
+                where: {
+                    groupId: group.id,
+                    [Op.or]: [
+                        { status: "member" },
+                        { status: "co-host" }
+                    ]
                 },
-            ]
+                attributes: ["status"]
+            }]
         })
 
         if (!members.length) {
             return res.status(200).json({message: "No members in this group"})
         }
 
-        console.log(members)
-
         return res.status(200).json(members)
     }
 
     //if user is organizer
-    const members = await Membership.findAll({
-        where: {
-            groupId: id
-        },
-        attributes: ["status"],
-        include: [
-            {
-                model: User, attributes: ["id", "firstName", "lastName"]
+    const members = await User.findAll({
+        attributes: ["id", "firstName", "lastName"],
+        include: [{
+            model: Membership, 
+            where: {
+                groupId: group.id
             },
-        ]
+            attributes: ["status"]
+        }]
     })
 
     if (!members.length) {
