@@ -271,7 +271,7 @@ router.delete("/:id", async (req,res,next) => {
     const cohost = await Membership.findAll({
         where: {
             groupId: event.groupId,
-            userId: user.id,
+            memberId: user.id,
             status: "co-host"
         }
     })
@@ -332,7 +332,7 @@ router.get("/:id/attendees", async (req,res,next) => {
             attributes: ["status"],
             include: [
                 {
-                    model: User, as: "Attendee", attributes: ["id", "firstName", "lastName"]
+                    model: User, attributes: ["id", "firstName", "lastName"]
                 }
             ]
         })
@@ -348,7 +348,7 @@ router.get("/:id/attendees", async (req,res,next) => {
         attributes: ["status"],
         include: [
             {
-                model: User, as: "Attendee", attributes: ["id", "firstName", "lastName"]
+                model: User, attributes: ["id", "firstName", "lastName"]
             }
         ]
     })
