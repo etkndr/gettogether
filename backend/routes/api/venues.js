@@ -20,7 +20,7 @@ router.put("/:id", async (req,res,next) => {
     const cohost = await Membership.findAll({
         where: {
             groupId: venue.groupId,
-            userId: user.id,
+            memberId: user.id,
             status: "co-host"
         }
     })
