@@ -30,7 +30,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'GroupImage'
+    modelName: 'GroupImage',
+    defaultScope: {
+      attributes: {
+        exclude: ["createdAt", "updatedAt"]
+      }
+    }
   });
   GroupImage.addScope("exclusion", {
     attributes: {
