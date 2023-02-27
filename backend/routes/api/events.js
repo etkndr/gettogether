@@ -75,6 +75,7 @@ router.get("/", async (req,res,next) => {
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("numAttending.id")), "numAttending"],
+                [sequelize.col("EventImages.url"), "previewImage"],
             ]
         },
         include: [
@@ -88,10 +89,10 @@ router.get("/", async (req,res,next) => {
                 model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
-                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
+                model: EventImage, attributes: [], duplicating: false
             }
     ],
-        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "EventImages.id"],
         limit,
         offset
     })
@@ -123,10 +124,10 @@ router.get("/:id", async (req,res,next) => {
                 model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
-                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
+                model: EventImage, attributes: ["id", "url", "preview"], duplicating: false
             }
     ],
-        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "EventImages.id"],
     })
 
     if (!event) {

@@ -45,7 +45,7 @@ router.get("/current", restoreUser, async (req, res, next) => {
         {
             model: GroupImage, attributes: [], duplicating: false
         }],
-        group: ["Group.id"]}
+        group: ["Group.id", ""]}
     )
 
     if (!user) {
@@ -165,11 +165,7 @@ router.post("/:id/images", async (req,res,next) => {
         preview
     })
 
-    const grpImg = await GroupImage.findOne({
-        where: {
-            id: newImg.id
-        }
-    })
+    const grpImg = await GroupImage.findByPk(newImg.id)
 
     return res.status(200).json(grpImg)
 })
@@ -337,6 +333,7 @@ router.get("/:id/events", async (req,res,next) => {
         attributes: { 
             include: [
                 [sequelize.fn("COUNT", sequelize.col("numAttending.id")), "numAttending"],
+                [sequelize.col("EventImages.url"), "previewImage"]
             ]
         },
         include: [
@@ -350,10 +347,10 @@ router.get("/:id/events", async (req,res,next) => {
                 model: Venue, attributes: ["id", "city", "state"], duplicating: false
             },
             {
-                model: EventImage, as: "previewImage", attributes: ["url"], duplicating: false
+                model: EventImage, attributes: [], duplicating: false
             }
     ],
-        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "previewImage.id"],
+        group: ["Event.id", "Group.id", "numAttending.id", "Venue.id", "EventImages.id"],
     })
 
     if (!group) {

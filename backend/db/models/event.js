@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Event.belongsTo(models.Group, {foreignKey: "groupId"})
       Event.belongsTo(models.Venue, {foreignKey: "venueId"})
       Event.hasMany(models.Attendance, {foreignKey: "eventId", as: "numAttending"})
-      Event.hasMany(models.EventImage, {foreignKey: "eventId", as: "previewImage"})
+      Event.hasMany(models.EventImage, {foreignKey: "eventId"})
     }
   }
   Event.init({
