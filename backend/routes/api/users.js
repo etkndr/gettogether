@@ -46,9 +46,11 @@ const validateSignup = [
       const user = await User.signup({ firstName, lastName, email, username, password });
   
       await setTokenCookie(res, user);
+
+      const newUser = await User.findByPk(user.id)
   
       return res.json({
-        user: user,
+        user: newUser,
       });
     }
   );

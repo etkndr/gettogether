@@ -10,13 +10,18 @@ router.use(restoreUser)
 // get all groups
 router.get("/", async (req, res) => {
     const groups = await Group.findAll({
+        subQuery: false,
         attributes: { 
-            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
+            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"],
+        [sequelize.col("GroupImages.url"), "previewImage"]] 
         },
         include: [{
-            model: Membership, attributes: []
-        }],
-        group: ["Group.id"]
+            model: Membership, attributes: [], duplicating: false
+        },
+    {
+        model: GroupImage, attributes: [], duplicating: false
+    }],
+        group: ["Group.id", "Memberships.id", "GroupImages.id"]
     })
 
     return res.status(200).json(groups)
@@ -27,13 +32,18 @@ router.get("/current", restoreUser, async (req, res, next) => {
     const { user } = req
     const userGroups = await Group.findAll(
         {where: {
+            
             organizerId: user.id
         },
         attributes: { 
-            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"]] 
+            include: [[sequelize.fn("COUNT", sequelize.col("Memberships.id")), "numMembers"],
+            [sequelize.col("GroupImages.url"), "previewImage"]] 
         },
         include: [{
             model: Membership, attributes: []
+        },
+        {
+            model: GroupImage, attributes: [], duplicating: false
         }],
         group: ["Group.id"]}
     )
@@ -70,10 +80,13 @@ router.get("/:id", async (req, res, next) => {
             model: Membership, attributes: [],
         },
         {
-            model: User, as: "organizer", attributes: []
+            model: User, as: "Organizer", attributes: ["id", "firstName", "lastName"]
         },
         {
-            model: GroupImage, attributes: []
+            model: GroupImage, attributes: ["id", "url", "preview"]
+        },
+        {
+            model: Venue, attributes: ["id", "groupId", "address", "city", "state", "lat", "lng"]
         }
     ],
         group: ["Group.id"]
@@ -426,7 +439,7 @@ router.get("/:id/members", async (req,res,next) => {
         return next(err)
     }
 
-    if (user) {
+    
         const cohost = await Membership.findAll({
             where: {
                 groupId: group.id,
@@ -434,7 +447,7 @@ router.get("/:id/members", async (req,res,next) => {
                 status: "co-host"
             }
         })
-    }
+    
 
     //if user is not organizer
     if (!user || user.id !== group.organizerId && !cohost) {

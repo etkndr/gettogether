@@ -312,7 +312,7 @@ router.get("/:id/attendees", async (req,res,next) => {
         }
     })
 
-    if (user) {
+    
     const cohost = await Membership.findAll({
         where: {
             groupId: group.id,
@@ -320,7 +320,7 @@ router.get("/:id/attendees", async (req,res,next) => {
             status: "co-host"
         }
     })
-}
+
 
     //not organizer/co-host
     if (!user || user.id !== group.organizerId && !cohost) {

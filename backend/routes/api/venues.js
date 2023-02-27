@@ -9,17 +9,19 @@ router.use(restoreUser)
 //edit venue by id
 router.put("/:id", async (req,res,next) => {
     const {user} = req
+    
+        if (!user) {
+            const err = new Error(`Authentication required`)
+            err.status = 401
+            return next(err)
+        }
     const id = req.params.id
     const venue = await Venue.findByPk(id)
     const {address, city, state, lat, lng} = req.body
-    const group = await Group.findAll({
-        where: {
-            id: venue.groupId
-        }
-    })
+    const group = await Group.findByPk(venue.groupId)
     const cohost = await Membership.findAll({
         where: {
-            groupId: venue.groupId,
+            groupId: group.id,
             memberId: user.id,
             status: "co-host"
         }
@@ -31,13 +33,7 @@ router.put("/:id", async (req,res,next) => {
         return next(err)
     }
 
-    if (!user) {
-        const err = new Error(`Authentication required`)
-        err.status = 401
-        return next(err)
-    }
-
-    if (!cohost || user.id !== group.organizerId) {
+    if (!cohost && user.id !== group.organizerId) {
         const err = new Error("Forbidden")
         err.status = 403
         return next(err)
@@ -57,7 +53,9 @@ router.put("/:id", async (req,res,next) => {
         lng
     })
 
-    return res.status(200).json(venue)
+    const newVenue = await Venue.findByPk(venue.id)
+
+    return res.status(200).json(newVenue)
 })
 
 module.exports = router

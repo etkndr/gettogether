@@ -34,9 +34,11 @@ router.post(
       }
   
       await setTokenCookie(res, user);
+
+      const curr = await User.findByPk(user.id)
   
       return res.json({
-        user: user
+        user: curr
       });
     }
   );
