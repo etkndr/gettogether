@@ -20,7 +20,7 @@ function Navigation({ isLoaded }){
         sessionLinks = (
             <li>
         <ProfileButton user={sessionUser} />
-        <button onClick={logout}>Log Out (MAIN)</button>
+        {/* <button onClick={logout}>Log Out (MAIN)</button> */}
       </li>
     );
 } else {
