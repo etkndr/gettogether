@@ -1,0 +1,23 @@
+body, button {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.dropdown-hidden {
+    display: none;
+}
+
+.dropdown-visible {
+    display:block;
+    list-style: none;
+    border: 1px solid gray;
+    width: max-content;
+    padding: 0 20px 0 20px;
+}
+
+.dropdown-visible button {
+    border: 1px solid black;
+    background-color: #FFF;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-self: center;
+}
