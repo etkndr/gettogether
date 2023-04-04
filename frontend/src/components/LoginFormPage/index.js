@@ -29,7 +29,7 @@ export default function LoginFormPage () {
     return (
             <form onSubmit={onSubmit}>
                 <ul>
-                    {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+                    {errors.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
                 </ul>
                 <label>
                     Username or Email

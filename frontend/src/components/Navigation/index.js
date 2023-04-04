@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import * as sessionActions from '../../store/session';
 import './Navigation.css';
+import logo from "./logo.png"
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
@@ -26,10 +27,10 @@ function Navigation({ isLoaded }){
 } else {
     sessionLinks = (
         <>
-        <li>
+        <li className='nav-link'>
         <NavLink to="/login">Log In</NavLink>
         </li>
-        <li>
+        <li className='nav-link'>
         <NavLink to="/signup">Sign Up</NavLink>
       </li>
       </>
@@ -37,12 +38,16 @@ function Navigation({ isLoaded }){
 }
 
   return (
-    <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
-      </li>
-      {isLoaded && sessionLinks}
-    </ul>
+    <>
+    <div className='main-nav'>
+      <div className='logo'>
+          <NavLink exact to="/"><img src={logo} width="120px"/></NavLink>
+      </div>
+      <div className='links'>
+          {isLoaded && sessionLinks}
+      </div>
+    </div>
+    </>
   );
 }
 

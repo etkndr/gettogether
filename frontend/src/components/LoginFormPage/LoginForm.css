@@ -1,0 +1,23 @@
+form {
+    font-family: 'Lato', sans-serif;
+}
+
+input {
+    margin-left: 10px;
+}
+
+.errors {
+
+}
+
+button {
+    color: white;
+    background-color: #ff3b41;
+    font-family: "Lato", sans-serif;
+    width: 300px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
