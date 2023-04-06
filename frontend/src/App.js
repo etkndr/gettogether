@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
 import Navigation from "./components/Navigation";
 import SignupFormPage from "./components/SignupFormPage";
+import LandingPage from "./components/LandingPage";
 import * as sessionActions from "./store/session";
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
+          <Route exact path="/">
+            <LandingPage/>
+          </Route>
           <Route path="/login">
             <LoginFormPage />
           </Route>

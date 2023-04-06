@@ -19,7 +19,7 @@ function Navigation({ isLoaded }){
     let sessionLinks;
     if (sessionUser) {
         sessionLinks = (
-            <li>
+            <li className='profile-btn'>
         <ProfileButton user={sessionUser} />
         {/* <button onClick={logout}>Log Out (MAIN)</button> */}
       </li>

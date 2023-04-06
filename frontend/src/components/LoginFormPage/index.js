@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -10,6 +10,16 @@ export default function LoginFormPage () {
     const [credential, setCredential] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState([])
+    const [disabled, setDisabled] = useState(true)
+
+    useEffect(() => {
+        if (credential.length > 3 &&
+            password.length > 5) {
+            setDisabled(false)
+            }
+        }, [credential,
+            password]
+    )
 
     if (sessionUser) {
         return <Redirect to="/" />
@@ -26,13 +36,20 @@ export default function LoginFormPage () {
         })
     }
 
+    let login;
+    if (disabled) {
+        login = "login-disabled"
+    } else {
+        login = "login"
+    }
+
     return (
             <form onSubmit={onSubmit}>
                 <ul>
                     {errors.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
                 </ul>
                 <label>
-                    Username or Email
+                    Email
                     <input
                     type="text"
                     value={credential}
@@ -49,7 +66,7 @@ export default function LoginFormPage () {
                     required
                     />
                 </label>
-                <button type="submit">Log In</button>
+                <button className={login} type="submit" disabled={disabled}>Log In</button>
             </form>
     )
 }
