@@ -5,13 +5,15 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto;
-    grid-template-areas: "sec-1 sec-1 sec-1"
-    "sec-2 sec-3 sec-4";
+    grid-template-areas: "intro intro intro"
+    "how how how"
+    "join find start"
+    ". join-btn .";
 }
 
-.sec-1 {
-    grid-area: sec-1;
-    margin-top: 150px;
+.intro {
+    grid-area: intro;
+    margin-top: 125px;
     display: grid;
     grid-template-columns: 2fr 2fr;
     grid-template-rows: auto;
@@ -30,17 +32,38 @@
 .intro-img {
     grid-area: img;
     width: 100%;
-    /* padding-left: 50px; */
 }
 
-.sec-2 {
-    grid-area: sec-2;
+.how-it-works {
+    text-align: center;
+    grid-area: how;
+    width: 50%;
+    margin: 75px auto 30px auto;
 }
 
-.sec-3 {
-    grid-area: sec-3;
+.join-group {
+    grid-area: join;
+    text-align: center;
 }
 
-.sec-4 {
-    grid-area: sec-4;
+.find-event {
+    grid-area: find;
+    text-align: center;
+}
+
+.start-group {
+    grid-area: start;
+    text-align: center;
+}
+
+.join-group p, .find-event p, .start-group p {
+    font-size: 11pt;
+    padding: 0 20px 0 20px;
+    font-weight: lighter;
+    line-height: 16pt;
+}
+
+.join {
+    grid-area: join-btn;
+    margin: 50px auto;
 }

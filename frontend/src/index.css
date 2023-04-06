@@ -12,6 +12,13 @@ h1 {
 }
 
 h2 {
-    font-size: 16pt;
+    font-size: 24pt;
     font-weight: 600;
+    line-height: 10pt;
+}
+
+h3 {
+    color: #0f7c8d;
+    font-weight: 600;
+    font-size: 14pt;
 }
