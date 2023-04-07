@@ -1,0 +1,103 @@
+.main {
+    margin: 0 auto;
+    max-width: 1100px;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "intro intro intro"
+    "how how how"
+    "join find start"
+    ". join-btn .";
+}
+
+.intro {
+    grid-area: intro;
+    margin-top: 125px;
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    grid-template-rows: auto;
+    grid-template-areas: "txt img";
+}
+
+.intro-txt {
+    grid-area: txt;
+    margin-right: 40px;
+}
+
+.intro-txt h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.intro-img {
+    grid-area: img;
+    width: 100%;
+}
+
+.how-it-works {
+    text-align: center;
+    grid-area: how;
+    width: 50%;
+    margin: 75px auto 30px auto;
+}
+
+.join-group {
+    grid-area: join;
+    text-align: center;
+}
+
+.find-event {
+    grid-area: find;
+    text-align: center;
+}
+
+.start-group {
+    grid-area: start;
+    text-align: center;
+}
+
+.join-group p, .find-event p, .start-group p {
+    font-size: 11pt;
+    padding: 0 20px 0 20px;
+    font-weight: lighter;
+    line-height: 16pt;
+}
+
+.landing-link {
+    color: #0f7c8d;
+    font-weight: 600;
+    font-size: 14pt;
+    text-decoration: none;
+}
+
+.landing-link:hover {
+    text-decoration: underline;
+}
+
+.landing-link-disabled {
+    color: gray;
+    font-weight: 600;
+    font-size: 14pt;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.join {
+    grid-area: join-btn;
+    margin: 50px auto;
+}
+
+.join button {
+    background-color: #0f7c8d;
+    color:white;
+    font-weight: 400;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.join button:hover {
+    cursor: pointer;
+    background-color: #3d9baa;
+}

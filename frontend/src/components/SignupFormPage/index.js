@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as sessionActions from "../../store/session";
@@ -14,11 +14,30 @@ export default function SignupFormPage () {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState('')
     const [errors, setErrors] = useState([])
+    const [disabled, setDisabled] = useState(true)
 
+    useEffect(() => {
+        if (username.length > 3 &&
+            firstName.length &&
+            lastName.length &&
+            email.length &&
+            password.length > 5 &&
+            confirmPassword.length &&
+            confirmPassword === password) {
+                setDisabled(false)
+            }
+        }, [username,
+            firstName,
+            lastName,
+            email,
+            password,
+            confirmPassword]
+    )
+    
     if (sessionUser) {
         return <Redirect to="/" />
     }
-
+    
     const onSubmit = (e) => {
         e.preventDefault()
         setErrors([])
@@ -31,11 +50,11 @@ export default function SignupFormPage () {
             password,
             confirmPassword
         }
-
+        
         if (confirmPassword !== password) {
             return setErrors(["Password confirmation must match password"])
         }
-
+        
         return dispatch(sessionActions.signup(user)).catch(async (res) => {
             const data = await res.json()
             if (data && data.errors) {
@@ -44,6 +63,13 @@ export default function SignupFormPage () {
         })
     }
 
+    let login;
+    if (disabled) {
+        login = "login-disabled"
+    } else {
+        login = "login"
+    }
+    
     return (
         <form onSubmit={onSubmit}>
             <ul>
@@ -73,7 +99,7 @@ export default function SignupFormPage () {
                 Confirm password
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </label>
-                <button type="submit">Sign up</button>
+                <button type="submit" className={login} disabled={disabled}>Sign up</button>
         </form>
     )
 }

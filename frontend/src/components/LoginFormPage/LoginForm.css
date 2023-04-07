@@ -1,0 +1,46 @@
+form {
+
+}
+
+input {
+    width: 300px;
+    height: 30px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    color: rgb(63, 63, 63);
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+}
+
+.errors {
+
+}
+
+.login {
+    color: white;
+    background-color: #ff3b41;
+    font-family: 'Open Sans', sans-serif;
+    width: 300px;
+    height: 45px;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.login-disabled {
+    color: white;
+    background-color: gray;
+    font-family: 'Open Sans', sans-serif;
+    width: 300px;
+    height: 45px;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: normal;
+    cursor: pointer;
+}
