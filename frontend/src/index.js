@@ -8,6 +8,8 @@ import configureStore from './store';
 import { csrfFetch, restoreCSRF } from './store/csrf';
 import * as sessionActions from "./store/session"
 
+// https://meetup-8d0b.onrender.com
+
 const store = configureStore();
 
 if (process.env.NODE_ENV !== "production") {

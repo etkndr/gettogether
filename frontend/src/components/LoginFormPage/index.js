@@ -3,6 +3,7 @@ import * as sessionActions from '../../store/session';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import "./LoginForm.css"
+import { useHistory } from 'react-router-dom';
 
 export default function LoginFormPage () {
     const dispatch = useDispatch()
@@ -11,6 +12,9 @@ export default function LoginFormPage () {
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(true)
+    const [hideModal, setHideModal] = useState(false)
+    const history = useHistory()
+
 
     useEffect(() => {
         if (credential.length > 3 &&
@@ -44,29 +48,29 @@ export default function LoginFormPage () {
     }
 
     return (
-            <form onSubmit={onSubmit}>
-                <ul>
-                    {errors.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
-                </ul>
-                <label>
-                    Email
-                    <input
-                    type="text"
-                    value={credential}
-                    onChange={(e) => setCredential(e.target.value)}
-                    required
-                    />
-                </label>
-                <label>
-                    Password
-                    <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    />
-                </label>
-                <button className={login} type="submit" disabled={disabled}>Log In</button>
-            </form>
+                <form onSubmit={onSubmit}>
+                    <ul>
+                        {errors.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
+                    </ul>
+                    <label>
+                        Email
+                        <input
+                        type="text"
+                        value={credential}
+                        onChange={(e) => setCredential(e.target.value)}
+                        required
+                        />
+                    </label>
+                    <label>
+                        Password
+                        <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        />
+                    </label>
+                    <button className={login} type="submit" disabled={disabled}>Log In</button>
+                </form>
     )
 }

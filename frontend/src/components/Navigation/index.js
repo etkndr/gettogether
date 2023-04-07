@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import * as sessionActions from '../../store/session';
 import './Navigation.css';
 import logo from "./logo.png"
+import LoginFormPage from '../LoginFormPage';
+import { useState } from 'react';
 
-function Navigation({ isLoaded }){
+function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch();
-  
+  const [loginClass, setLoginClass] = useState("login-modal-hidden")
+  // const {hideModal, closeModal} = LoginFormPage
+
+  // useEffect(() => {
+  //   setLoginClass("login-modal-hidden")
+  // }, [closeModal])
+
+  function showModal(e) {
+    e.preventDefault()
+    setLoginClass("login-modal")
+  }
+
+  function hideModal(e) {
+    e.preventDefault()
+    setLoginClass("login-modal-hidden")
+  }
   
   const logout = (e) => {
       e.preventDefault();
@@ -21,17 +38,16 @@ function Navigation({ isLoaded }){
         sessionLinks = (
             <li className='profile-btn'>
         <ProfileButton user={sessionUser} />
-        {/* <button onClick={logout}>Log Out (MAIN)</button> */}
       </li>
     );
 } else {
     sessionLinks = (
         <>
         <li className='nav-link'>
-        <NavLink to="/login">Log In</NavLink>
+        <button onClick={showModal}>Log In</button>
         </li>
         <li className='nav-link'>
-        <NavLink to="/signup">Sign Up</NavLink>
+        <button>Sign Up</button>
       </li>
       </>
     );
@@ -45,6 +61,12 @@ function Navigation({ isLoaded }){
       </div>
       <div className='links'>
           {isLoaded && sessionLinks}
+      </div>
+    </div>
+    <div className={loginClass}>
+      <div className='login-modal-content'>
+      <button className='close-modal' onClick={hideModal}>X</button>
+      <LoginFormPage/>
       </div>
     </div>
     </>
