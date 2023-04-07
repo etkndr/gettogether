@@ -27,6 +27,7 @@
 
 .intro-txt h1 {
     margin-top: 0;
+    margin-bottom: 20px;
 }
 
 .intro-img {
@@ -63,7 +64,40 @@
     line-height: 16pt;
 }
 
+.landing-link {
+    color: #0f7c8d;
+    font-weight: 600;
+    font-size: 14pt;
+    text-decoration: none;
+}
+
+.landing-link:hover {
+    text-decoration: underline;
+}
+
+.landing-link-disabled {
+    color: gray;
+    font-weight: 600;
+    font-size: 14pt;
+    text-decoration: none;
+    pointer-events: none;
+}
+
 .join {
     grid-area: join-btn;
     margin: 50px auto;
+}
+
+.join button {
+    background-color: #0f7c8d;
+    color:white;
+    font-weight: 400;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.join button:hover {
+    cursor: pointer;
+    background-color: #3d9baa;
 }

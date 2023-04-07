@@ -1,11 +1,24 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./LandingPage.css"
 import introImg from "../../assets/online_events.svg"
 import joinImg from "../../assets/handsUp.svg"
 import findImg from "../../assets/ticket.svg"
 import startImg from "../../assets/joinGroup.svg"
+import * as sessionActions from "../../store/session"
+import { useSelector } from "react-redux";
 
 export default function LandingPage() {
+
+    const sessionUser = useSelector(state => state.session.user)
+
+    let startGroupClass
+    if (sessionUser) {
+        startGroupClass = "landing-link"
+    } else {
+        startGroupClass = "landing-link-disabled"
+    }
+
     return (
         <div className="main">
 
@@ -41,9 +54,7 @@ export default function LandingPage() {
                 <div className="join-img">
                     <img src={joinImg}/>
                 </div>
-                <h3>
-                    See all groups
-                </h3>
+                    <Link to="/groups" className="landing-link">See all groups</Link>
                 <p>
                     Do what you love, meet others who love it, find your community. The rest is history!
                 </p>
@@ -52,9 +63,7 @@ export default function LandingPage() {
                 <div className="find-img">
                     <img src={findImg}/>
                 </div>
-                <h3>
-                    Find an event
-                </h3>
+                <Link to="/events" className="landing-link">Find an event</Link>
                 <p>
                     Events are happening on just about any topic you can think of, 
                     from online gaming and photography to yoga and hiking.
@@ -64,9 +73,7 @@ export default function LandingPage() {
                 <div className="start-img">
                     <img src={startImg}/>
                 </div>
-                <h3>
-                    Start a group
-                </h3>
+                <Link to="/groups/new" className={startGroupClass}>Start a group</Link>
                 <p>
                     You don't have to be an expert to gather people together and explore shared interests.
                 </p>
