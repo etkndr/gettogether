@@ -5,14 +5,14 @@ import { Redirect } from 'react-router-dom';
 import "./LoginForm.css"
 import { useHistory } from 'react-router-dom';
 
-export default function LoginFormPage () {
+
+export default function LoginFormPage ({ clearData }) {
     const dispatch = useDispatch()
     const sessionUser = useSelector(state => state.session.user)
     const [credential, setCredential] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(true)
-    const [hideModal, setHideModal] = useState(false)
     const history = useHistory()
 
 
@@ -20,13 +20,32 @@ export default function LoginFormPage () {
         if (credential.length > 3 &&
             password.length > 5) {
             setDisabled(false)
+            } else {
+                setDisabled(true)
             }
         }, [credential,
             password]
     )
 
+    useEffect(() => {
+        setCredential('')
+        setPassword('')
+        setErrors([])
+        setDisabled(true)
+    }, [clearData])
+
     if (sessionUser) {
         return <Redirect to="/" />
+    }
+
+    const demoUser = (e) => {
+        const user = {
+            credential: "Demo-lition",
+            password: "password"
+        }
+
+        history.push("/")
+        return dispatch(sessionActions.login(user))
     }
 
     const onSubmit = (e) => {
@@ -48,6 +67,7 @@ export default function LoginFormPage () {
     }
 
     return (
+        <div>
                 <form onSubmit={onSubmit}>
                     <ul>
                         {errors.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
@@ -70,7 +90,9 @@ export default function LoginFormPage () {
                         required
                         />
                     </label>
-                    <button className={login} type="submit" disabled={disabled}>Log In</button>
+                    <button className={login} type="submit" disabled={disabled}>Log in</button>
                 </form>
+                <button className="demo-btn" onClick={demoUser}>Log in as demo user</button>
+                    </div>
     )
 }

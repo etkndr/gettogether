@@ -12,26 +12,26 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch();
   const [loginClass, setLoginClass] = useState("login-modal-hidden")
-  // const {hideModal, closeModal} = LoginFormPage
-
-  // useEffect(() => {
-  //   setLoginClass("login-modal-hidden")
-  // }, [closeModal])
+  const [clearData, setClearData] = useState(false)
 
   function showModal(e) {
     e.preventDefault()
     setLoginClass("login-modal")
+    setClearData(false)
   }
-
+  
   function hideModal(e) {
     e.preventDefault()
     setLoginClass("login-modal-hidden")
+    setClearData(true);
   }
   
-  const logout = (e) => {
-      e.preventDefault();
-      dispatch(sessionActions.logout());
-    };
+  useEffect(() => {
+    if (sessionUser) {
+      setLoginClass("login-modal-hidden")
+    }
+
+  }, [sessionUser])
     
     let sessionLinks;
     if (sessionUser) {
@@ -40,16 +40,16 @@ function Navigation({ isLoaded }) {
         <ProfileButton user={sessionUser} />
       </li>
     );
-} else {
-    sessionLinks = (
-        <>
-        <li className='nav-link'>
-        <button onClick={showModal}>Log In</button>
+    } else {
+      sessionLinks = (
+          <>
+          <li className='nav-link'>
+          <button onClick={showModal}>Log In</button>
+          </li>
+          <li className='nav-link'>
+          <button>Sign Up</button>
         </li>
-        <li className='nav-link'>
-        <button>Sign Up</button>
-      </li>
-      </>
+        </>
     );
 }
 
@@ -66,7 +66,7 @@ function Navigation({ isLoaded }) {
     <div className={loginClass}>
       <div className='login-modal-content'>
       <button className='close-modal' onClick={hideModal}>X</button>
-      <LoginFormPage/>
+      <LoginFormPage clearData={clearData} />
       </div>
     </div>
     </>
