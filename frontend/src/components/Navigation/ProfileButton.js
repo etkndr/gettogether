@@ -4,6 +4,7 @@
   
   
   function ProfileButton({ user }) {
+    console.log(user)
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
@@ -51,8 +52,6 @@
         </button>
         <ul className={ulClassName} ref={ulRef}>
           <li className="profile-link">Hello, {user.firstName}!</li>
-          <li className="profile-link">{user.username}</li>
-          <li className="profile-link">{user.firstName} {user.lastName}</li>
           <li className="profile-link">{user.email}</li>
           <li>
             <button onClick={logout} className="logout">Log Out</button>

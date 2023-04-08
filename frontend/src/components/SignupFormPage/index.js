@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import "./SignupForm.css"
 
-export default function SignupFormPage () {
+export default function SignupFormPage ({ clearData }) {
     const dispatch = useDispatch()
     const sessionUser = useSelector(state => state.session.user)
     const [username, setUsername] = useState("")
@@ -25,6 +25,8 @@ export default function SignupFormPage () {
             confirmPassword.length &&
             confirmPassword === password) {
                 setDisabled(false)
+            } else {
+                setDisabled(true)
             }
         }, [username,
             firstName,
@@ -33,6 +35,17 @@ export default function SignupFormPage () {
             password,
             confirmPassword]
     )
+
+    useEffect(() => {
+        setUsername('')
+        setFirstName('')
+        setLastName('')
+        setEmail('')
+        setPassword('')
+        setConfirmPassword('')
+        setErrors([])
+        setDisabled(true)
+    }, [clearData])
     
     if (sessionUser) {
         return <Redirect to="/" />
@@ -63,11 +76,11 @@ export default function SignupFormPage () {
         })
     }
 
-    let login;
+    let signup;
     if (disabled) {
-        login = "login-disabled"
+        signup = "login-disabled"
     } else {
-        login = "login"
+        signup = "login"
     }
     
     return (
@@ -99,7 +112,7 @@ export default function SignupFormPage () {
                 Confirm password
                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </label>
-                <button type="submit" className={login} disabled={disabled}>Sign up</button>
+                <button type="submit" className={signup} disabled={disabled}>Sign up</button>
         </form>
     )
 }

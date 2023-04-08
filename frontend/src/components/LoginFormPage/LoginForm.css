@@ -22,18 +22,22 @@
     padding-left: 0;
 }
 
-.login-modal-content .login {
+.login {
     color: white;
     background-color: #ff3b41;
     font-family: 'Open Sans', sans-serif;
     width: 100%;
-    height: 45px;
+    height: 35px;
     border: none;
     border-radius: 5px;
     font-size: 20px;
-    font-weight: normal;
+    font-weight: 600;
     cursor: pointer;
     padding: 0px;
+}
+
+.login:hover {
+    background-color: #ff7075;
 }
 
 .login-disabled {
@@ -41,11 +45,11 @@
     background-color: gray;
     font-family: 'Open Sans', sans-serif;
     width: 100%;
-    height: 45px;
+    height: 35px;
     border: none;
     border-radius: 5px;
     font-size: 20px;
-    font-weight: normal;
+    font-weight: 600;
     cursor: default;
 }
 
@@ -54,11 +58,11 @@
     background-color: #ff3b41;
     font-family: 'Open Sans', sans-serif;
     width: 100%;
-    height: 45px;
+    height: 35px;
     border: none;
     border-radius: 5px;
     font-size: 20px;
-    font-weight: normal;
+    font-weight: 600;
     cursor: pointer;
     padding: 0px;
 }

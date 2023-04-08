@@ -15,6 +15,13 @@ body {
     border-bottom: 1px solid lightgray;
 }
 
+.main-no-border {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 0;
+}
+
 .links {
     display: flex;
     align-items: center;
@@ -30,6 +37,7 @@ body {
     font-size: 10pt;
     cursor: pointer;
     border: 0;
+    background-color: white;
 }
 
 .dropdown-hidden {
@@ -47,6 +55,12 @@ body {
     width: max-content;
     padding: 0 20px 0 5px;
     justify-content: left;
+    cursor: default;
+}
+
+.dropdown-visible button {
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .main-nav button {
@@ -85,6 +99,7 @@ button.profile {
 .profile-link {
     margin-top: 5px;
     margin-bottom: 10px;
+    font-size: 14px;
 }
 
 button.logout {
