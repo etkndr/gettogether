@@ -1,4 +1,5 @@
   import React, { useState, useEffect, useRef } from "react";
+  import { NavLink } from "react-router-dom";
   import { useDispatch } from 'react-redux';
   import * as sessionActions from '../../store/session';
   
@@ -53,6 +54,10 @@
         <ul className={ulClassName} ref={ulRef}>
           <li className="profile-link">Hello, {user.firstName}!</li>
           <li className="profile-link">{user.email}</li>
+          <hr></hr>
+          <li>
+            <li className="profile-link"><NavLink to="/groups" className="profile-link">View groups</NavLink></li>
+          </li>
           <li>
             <button onClick={logout} className="logout">Log Out</button>
           </li>

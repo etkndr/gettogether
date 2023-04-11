@@ -1,0 +1,8 @@
+.group {
+    cursor: pointer;
+    list-style-type: none;
+}
+
+.select {
+    font-size: 14pt;
+}
