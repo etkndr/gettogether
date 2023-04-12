@@ -4,5 +4,23 @@
 }
 
 .select {
+    margin: 10px 10px 10px 10px;
+}
+
+.select a {
     font-size: 14pt;
+    font-weight: 600;
+    padding: 10px;
+    color: gray;
+    text-decoration: none;
+}
+
+.select a.active {
+    font-size: 14pt;
+    font-weight: 600;
+    padding: 10px;
+    color: #0f7c8d;
+    text-decoration: underline;
+    text-decoration-thickness: 4px;
+    text-underline-offset: 8px;
 }

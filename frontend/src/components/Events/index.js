@@ -2,7 +2,7 @@ import * as groupActions from "../../store/groups"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
-import "./Groups.css"
+import "./Events.css"
 
 export default function Groups() {
     // const dispatch = useDispatch()
