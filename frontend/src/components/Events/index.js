@@ -4,13 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
 import "./Events.css"
 
-export default function Groups() {
-    // const dispatch = useDispatch()
-    // const groups = useSelector(state => state.groups.groups)
-    
-    // useEffect(() => {
-    //     dispatch(groupActions.allGroups())
-    // }, [dispatch])
+export default function Events() {
 
     const [groups, setGroups] = useState([])
     const [events, setEvents] = useState([])

@@ -1,17 +1,11 @@
 import * as groupActions from "../../store/groups"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink } from "react-router-dom"
+import { NavLink, Redirect } from "react-router-dom"
 import "./Groups.css"
+import GroupDetail from "../GroupDetail"
 
 export default function Groups() {
-    // const dispatch = useDispatch()
-    // const groups = useSelector(state => state.groups.groups)
-    
-    // useEffect(() => {
-    //     dispatch(groupActions.allGroups())
-    // }, [dispatch])
-
     const [groups, setGroups] = useState([])
     const [events, setEvents] = useState([])
     const [loading, setLoading] = useState(true)
@@ -24,6 +18,10 @@ export default function Groups() {
         .then(data => {
             setGroups(data)
         })
+    }
+
+    function details(id) {
+        <Redirect to={`/groups/${id}`} />
     }
 
     useEffect(() => {
@@ -59,6 +57,7 @@ export default function Groups() {
         </div>
             {!loading && groups?.map((group, idx) => {
                 return (
+                    <NavLink to={`/group/${group.id}`} className="group-detail-link">
                     <li key={idx} className="group">
                         <li key={`${idx}-img`}><img src={group.previewImage} alt="group img" /></li>
                         <li key={`${idx}-name`}>{group.name}</li>
@@ -70,6 +69,7 @@ export default function Groups() {
                         </li>
                         <hr></hr>
                     </li>
+                    </NavLink>
                 )
             })}
         </>
