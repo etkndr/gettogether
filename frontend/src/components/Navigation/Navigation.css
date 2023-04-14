@@ -2,10 +2,11 @@ body {
     margin: 0px;
 }
 
-.logo {
+.logo img {
     display: flex;
     margin-left: 40px;
-    margin-top: 5px;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
 .main-nav {

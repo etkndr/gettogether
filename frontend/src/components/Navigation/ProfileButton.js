@@ -44,7 +44,7 @@
         dropArrow = "fa-solid fa-angle-up"
       }
 
-  
+
     return (
       <>
         <button onClick={openMenu} className="profile">

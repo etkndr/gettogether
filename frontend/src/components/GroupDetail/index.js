@@ -19,6 +19,18 @@ export default function GroupDetail() {
         alert("Feature coming soon")
     }
 
+    function createEvent() {
+
+    }
+
+    function updateGroup() {
+
+    }
+
+    function dltGroup() {
+
+    }
+
     useEffect(() => {
         currGroup()
     }, [])
@@ -29,17 +41,26 @@ export default function GroupDetail() {
         <div>
             <img src={group?.GroupImages[0]?.url}></img>
             {group?.name}
-            {group?.city}
+            {group?.city + ", "}
             {group?.state}
             <div>
             Organized by:
-            {group?.Organizer?.firstName}
+            {" " + group?.Organizer?.firstName + " "}
             {group?.Organizer?.lastName}
             </div>
 
             {sessionUser && sessionUser.id !== group.Organizer.id &&
             <button onClick={popup}>Join this group</button>
             }
+
+            {sessionUser && sessionUser.id === group.Organizer.id && 
+            <button onClick={createEvent}>Create event</button>}
+
+            {sessionUser && sessionUser.id === group.Organizer.id &&
+            <button onClick={updateGroup}>Update</button>}
+
+            {sessionUser && sessionUser.id === group.Organizer.id &&
+            <button onClick={dltGroup}>Delete</button>}
 
             <h2>What we're about</h2>
             {group?.about}

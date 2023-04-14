@@ -9,6 +9,7 @@ export default function Groups() {
     const [groups, setGroups] = useState([])
     const [events, setEvents] = useState([])
     const [loading, setLoading] = useState(true)
+    const numEvents = {}
 
     function fetchGroups() {
         fetch("/api/groups")
@@ -20,31 +21,36 @@ export default function Groups() {
         })
     }
 
-    function details(id) {
-        <Redirect to={`/groups/${id}`} />
+    function fetchEvents() {
+        fetch("/api/events")
+        .then(res => {
+            return res.json()
+        })
+        .then(data => {
+            setEvents(data)
+        })
     }
 
     useEffect(() => {
         fetchGroups()
-
-        const groupEvents = async () => {
-            groups?.forEach(async (group) => {
-                await fetch(`/api/groups/${group.id}/events`)
-                .then(res => {
-                    return res.json()
-                })
-                .then(data => {
-                    setEvents(data)
-                })
-            })
-        }
-        groupEvents()
+        fetchEvents()
         setLoading(false)
-    }, [])
 
-    groups.forEach((group) => {
-        console.log(group.private)
+    }, [])
+    
+    groups?.forEach((group) => {
+        events?.forEach((event) => {
+            if (event.groupId === group.id) {
+                if (numEvents[group.id]) {
+                    numEvents[group.id]++
+                } else {
+                    numEvents[group.id] = 1
+                }
+            }
+        })
     })
+    
+
 
     return (
         <>
@@ -63,7 +69,7 @@ export default function Groups() {
                         <li key={`${idx}-name`}>{group.name}</li>
                         <li key={`${idx}-city`}>{group.city}, {group.state}</li>
                         <li key={`${idx}-about`}>{group.about}</li>
-                        <li key={`${idx}-events`}>{events.length} events ·
+                        <li key={`${idx}-events`}>{numEvents[group.id] || 0} events ·
                         {group.private && <div>Private</div>}
                         {!group.private && <div>Public</div>}
                         </li>
