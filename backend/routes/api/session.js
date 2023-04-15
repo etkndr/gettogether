@@ -62,10 +62,9 @@ router.get(
         return res.json({
           user: user.toSafeObject()
         });
-      } 
-      const err = new Error("Authentication required")
-      err.status = 401
-      return next(err);
+      } else {
+        return res.json({})
+      }
     }
   );
 

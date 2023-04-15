@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch, useParams } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
 import Navigation from "./components/Navigation";
 import SignupFormPage from "./components/SignupFormPage";
 import LandingPage from "./components/LandingPage";
 import * as sessionActions from "./store/session";
+import Groups from "./components/Groups";
+import Events from "./components/Events"
+import GroupDetail from "./components/GroupDetail"
 
 function App() {
   const dispatch = useDispatch();
@@ -15,7 +18,6 @@ function App() {
     setIsLoaded(true);
   }, [dispatch]);
 
-
   return (
     <>
       <Navigation isLoaded={isLoaded} />
@@ -24,11 +26,14 @@ function App() {
           <Route exact path="/">
             <LandingPage/>
           </Route>
-          <Route path="/login">
-            <LoginFormPage />
+          <Route path="/groups">
+            <Groups />
           </Route>
-          <Route path="/signup">
-            <SignupFormPage />
+          <Route path="/events">
+            <Events />
+          </Route>
+          <Route path={`/group/:id`}>
+            <GroupDetail />
           </Route>
         </Switch>
       )}
