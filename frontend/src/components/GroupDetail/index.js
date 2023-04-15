@@ -1,69 +1,68 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { NavLink, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import * as groupActions from "../../store/groups"
+import getDetails from "../../store/details"
 
 export default function GroupDetail() {
-    const [group, setGroup] = useState({})
+    const dispatch = useDispatch()
     const [loaded, setLoaded] = useState(false)
     const sessionUser = useSelector(state => state.session.user)
+    const group = useSelector(state => state.details)
     const {id} = useParams()
-
-    function currGroup() {
-        fetch(`/api/groups/${id}`)
-        .then(res => res.json())
-        .then(data => setGroup(data))
-        .then(() => setLoaded(true))
-    }
-
+    
+    useEffect(() => {
+        dispatch(getDetails(id))
+        setLoaded(true)
+    }, [dispatch])
+    
+    // console.log(group)
+    
     function popup() {
         alert("Feature coming soon")
     }
-
+    
     function createEvent() {
-
+        
     }
-
+    
     function updateGroup() {
-
+        
     }
-
+    
     function dltGroup() {
-
+        
     }
-
-    useEffect(() => {
-        currGroup()
-    }, [])
-
-
+    
+    
     if (loaded) {
     return (
         <div>
-            <img src={group?.GroupImages[0]?.url}></img>
+            {/* <p><NavLink to="/groups">Groups</NavLink> > {group.name} </p>
+            <img src={group?.previewImage}></img>
             {group?.name}
-            {group?.city + ", "}
+            {" " + group?.city + ", "}
             {group?.state}
             <div>
             Organized by:
-            {" " + group?.Organizer?.firstName + " "}
-            {group?.Organizer?.lastName}
+            {" " + group?.organizerId}
             </div>
 
-            {sessionUser && sessionUser.id !== group.Organizer.id &&
+            {sessionUser && sessionUser.id !== group.organizerId &&
             <button onClick={popup}>Join this group</button>
             }
 
-            {sessionUser && sessionUser.id === group.Organizer.id && 
+            {sessionUser && sessionUser.id === group.organizerId && 
             <button onClick={createEvent}>Create event</button>}
 
-            {sessionUser && sessionUser.id === group.Organizer.id &&
+            {sessionUser && sessionUser.id === group.organizerId &&
             <button onClick={updateGroup}>Update</button>}
 
-            {sessionUser && sessionUser.id === group.Organizer.id &&
+            {sessionUser && sessionUser.id === group.organizerId &&
             <button onClick={dltGroup}>Delete</button>}
 
             <h2>What we're about</h2>
-            {group?.about}
+            {group?.about} */}
         </div>
     )
     }

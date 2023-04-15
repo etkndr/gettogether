@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch, useParams } from "react-router-dom";
 import LoginFormPage from "./components/LoginFormPage";
 import Navigation from "./components/Navigation";
@@ -17,7 +17,6 @@ function App() {
     dispatch(sessionActions.restoreUser())
     setIsLoaded(true);
   }, [dispatch]);
-
 
   return (
     <>
