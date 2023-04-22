@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { NavLink, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import * as groupActions from "../../store/groups"
+import { getGroupEvents, clear } from "../../store/events"
 
 export default function GroupDetail() {
-    const [group, setGroup] = useState({})
-    const [loaded, setLoaded] = useState(false)
+    const dispatch = useDispatch()
     const sessionUser = useSelector(state => state.session.user)
+    const [loaded, setLoaded] = useState(false)
+    const [group, setGroup] = useState()
+    const [events, setEvents] = useState()
     const {id} = useParams()
+    const allEvents = useSelector(state => state.events.groupEvents)
 
-    function currGroup() {
-        fetch(`/api/groups/${id}`)
+    const currGroup = async () => {
+        await fetch(`/api/groups/${id}`)
         .then(res => res.json())
         .then(data => setGroup(data))
-        .then(() => setLoaded(true))
     }
-
+    
     function popup() {
         alert("Feature coming soon")
     }
@@ -24,25 +28,40 @@ export default function GroupDetail() {
     }
 
     function updateGroup() {
-
+        
     }
-
+    
     function dltGroup() {
-
+        
     }
 
+    
     useEffect(() => {
         currGroup()
-    }, [])
+        .then(dispatch(getGroupEvents(id)))
+        .then(setLoaded(true))
+    }, [dispatch])
+    
+    useEffect(() => {
+        setEvents(allEvents)
 
+        return () => {
+            dispatch(clear())
+            setEvents([])
+        }
+    }, [loaded === true])
 
-    if (loaded) {
+    console.log(events)
+
+    if (loaded && events?.length) {
     return (
         <div>
-            <img src={group?.GroupImages[0]?.url}></img>
-            {group?.name}
-            {group?.city + ", "}
+            <div><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
+            <div><img src={group?.GroupImages[0]?.url}></img></div>
+            <div>{group?.name}</div>
+            <div>{group?.city + ", "}
             {group?.state}
+            </div>
             <div>
             Organized by:
             {" " + group?.Organizer?.firstName + " "}
@@ -64,6 +83,13 @@ export default function GroupDetail() {
 
             <h2>What we're about</h2>
             {group?.about}
+
+            <h2>Group events</h2>
+            {events?.map((event) => {
+                return (
+                    <li key={event?.id}>{event?.name}</li>
+                )
+            })}
         </div>
     )
     }
