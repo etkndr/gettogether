@@ -17,6 +17,18 @@ export default function GroupDetail() {
         .then(res => res.json())
         .then(data => setGroup(data))
     }
+
+    function convertTime(dateTime) {
+        let date = new Date(dateTime)
+        let slicedDate = date.toDateString()
+        let slicedTime = date.toTimeString()
+        let hrs = slicedTime.slice(0,2)
+        let mins = slicedTime.slice(3,5)
+        let amPm = hrs >= 12 ? "pm" : "am"
+        if (hrs > 12) hrs = hrs % 12
+        
+        return `${slicedDate} · ${hrs}:${mins} ${amPm}`
+    }
     
     function popup() {
         alert("Feature coming soon")
@@ -33,7 +45,6 @@ export default function GroupDetail() {
     function dltGroup() {
         
     }
-
     
     useEffect(() => {
         currGroup()
@@ -42,6 +53,8 @@ export default function GroupDetail() {
     }, [dispatch, id])
 
     if (loaded && allEvents) {
+       let sorted = allEvents.sort((e1, e2) => (e1.startDate > e2.startDate || e1.startDate < Date.now()) ? 1 : (e1.startDate < e2.startDate) ? -1 : 0)
+
     return (
         <div>
             <div><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
@@ -69,13 +82,16 @@ export default function GroupDetail() {
             {sessionUser && sessionUser.id === group.Organizer.id &&
             <button onClick={dltGroup}>Delete</button>}
 
-            <h2>What we're about</h2>
+            <h3>What we're about</h3>
             {group?.about}
 
-            <h2>Group events</h2>
+            <h3>Events {`(${allEvents.length})`}</h3>
             {allEvents?.map((event) => {
                 return (
-                    <li key={event?.id}>{event?.name}</li>
+                    <li key={event?.id}>
+                        <p>{convertTime(event.startDate)}</p>
+                        <p>{event?.name}</p>
+                        </li>
                 )
             })}
         </div>
