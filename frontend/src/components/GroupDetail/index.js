@@ -9,7 +9,6 @@ export default function GroupDetail() {
     const sessionUser = useSelector(state => state.session.user)
     const [loaded, setLoaded] = useState(false)
     const [group, setGroup] = useState()
-    const [events, setEvents] = useState()
     const {id} = useParams()
     const allEvents = useSelector(state => state.events.groupEvents)
 
@@ -40,20 +39,9 @@ export default function GroupDetail() {
         currGroup()
         .then(dispatch(getGroupEvents(id)))
         .then(setLoaded(true))
-    }, [dispatch])
-    
-    useEffect(() => {
-        setEvents(allEvents)
+    }, [dispatch, id])
 
-        return () => {
-            dispatch(clear())
-            setEvents([])
-        }
-    }, [loaded === true])
-
-    console.log(events)
-
-    if (loaded && events?.length) {
+    if (loaded && allEvents) {
     return (
         <div>
             <div><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
@@ -85,7 +73,7 @@ export default function GroupDetail() {
             {group?.about}
 
             <h2>Group events</h2>
-            {events?.map((event) => {
+            {allEvents?.map((event) => {
                 return (
                     <li key={event?.id}>{event?.name}</li>
                 )

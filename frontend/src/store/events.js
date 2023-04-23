@@ -42,7 +42,7 @@ export default function eventReducer(state = initState, action) {
     let groupEvents = []
 switch(action.type) {
     case CLEAR_DATA:
-        groupEvents = [null]
+        groupEvents = null
         return {
             ...state,
             groupEvents
@@ -57,13 +57,9 @@ switch(action.type) {
             ...state
         }
     case GROUP_EVENTS:
-        action.events.forEach((event) => {
-            groupEvents.push(event)
-        })
-        return {
-            ...state,
-            groupEvents: groupEvents
-        }
+        const newState = {...state}
+        newState.groupEvents = action.events
+        return newState
     default:
         return state
 }
