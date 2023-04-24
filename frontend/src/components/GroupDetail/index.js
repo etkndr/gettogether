@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { NavLink, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
-import { getGroupEvents, clear } from "../../store/events"
+import { getGroupEvents} from "../../store/events"
+import "./detail.css"
 
 export default function GroupDetail() {
     const dispatch = useDispatch()
@@ -53,7 +54,16 @@ export default function GroupDetail() {
     }, [dispatch, id])
 
     if (loaded && allEvents) {
-       let sorted = allEvents.sort((e1, e2) => (e1.startDate > e2.startDate || e1.startDate < Date.now()) ? 1 : (e1.startDate < e2.startDate) ? -1 : 0)
+       let sorted = allEvents.sort((e1, e2) => (e1.startDate > e2.startDate) ? 1 : (e1.startDate < e2.startDate) ? -1 : 0)
+
+        let past = []
+        
+        sorted = sorted.reduce((prev, curr) => {
+            let date = new Date(curr.startDate)
+            if (date < Date.now()) past.push(curr)
+            else prev.push(curr)
+            return prev
+        }, [])
 
     return (
         <div>
@@ -85,14 +95,33 @@ export default function GroupDetail() {
             <h3>What we're about</h3>
             {group?.about}
 
-            <h3>Events {`(${allEvents.length})`}</h3>
-            {allEvents?.map((event) => {
+            <h3>Events {`(${sorted.length})`}</h3>
+            {sorted?.map((event) => {
                 return (
+                    <div className="event">
+                        <img src={event.previewImage} alt="preview"></img>
+                        <p>{event.description}</p>
                     <li key={event?.id}>
                         <p>{convertTime(event.startDate)}</p>
                         <p>{event?.name}</p>
-                        </li>
+                        <p>{event.Group.city}, {event.Group.state}</p>
+                    </li>
+                    </div>
                 )
+            })}
+            {past.length > 0 && <h3>Past events {`(${past.length})`}</h3>}
+            {past?.map((event) => {
+                    return (
+                        <div className="event">
+                            <img src={event.previewImage} alt="preview"></img>
+                            <p>{event.description}</p>
+                        <li key={event?.id}>
+                            <p>{convertTime(event.startDate)}</p>
+                            <p>{event?.name}</p>
+                            <p>{event.Group.city}, {event.Group.state}</p>
+                        </li>
+                        </div>
+                ) 
             })}
         </div>
     )
