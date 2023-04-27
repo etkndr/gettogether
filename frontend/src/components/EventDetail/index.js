@@ -18,22 +18,38 @@ export default function EventDetail () {
             .then(data => setGroup(data))
         }
         dispatch(getOneEvent(id))
-        .then(currGroup(event?.groupId))
-        .then(setLoaded(true))
+
+        if (event?.groupId) {
+        (currGroup(event?.groupId))
+        }
+
+        setLoaded(true)
     }, [dispatch, id, event?.groupId])
 
     if (loaded && event && group) {
+        console.log(event)
     return (
         <div>
             <div>
-                <NavLink to="/events">Events</NavLink> {`>`} {event.name}
+                <NavLink to="/events">Events</NavLink> {`>`} {event?.name}
             </div>
             <div>
                 <p>
-                    {event.name}
+                    {event?.name}
                 </p>
                 <p>
-                    {group?.Organizer?.firstName}
+                Hosted by:
+            {" " + group?.Organizer?.firstName + " "}
+            {group?.Organizer?.lastName}
+                </p>
+                <div>
+                    {event?.EventImages[0]}
+                </div>
+                <div>
+                    Event info: {event?.description}
+                </div>
+                <p>
+                    Group info: {group?.about}
                 </p>
             </div>
         </div>
