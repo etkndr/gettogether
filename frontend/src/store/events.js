@@ -50,14 +50,8 @@ export default function eventReducer(state = initState, action) {
     const newState = {...state}
 switch(action.type) {
     case LOAD_EVENTS:
-        const allEvents = {}
-        action.events.forEach((event) => {
-            allEvents[event.id] = event
-        })
-        return {
-            ...allEvents,
-            ...state
-        }
+        newState.allEvents = action.events
+        return newState
     case ONE_EVENT:
         newState.currEvent = action.event
         return newState

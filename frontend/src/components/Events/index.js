@@ -1,47 +1,28 @@
 import * as groupActions from "../../store/groups"
+import * as eventActions from "../../store/events"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
 import "./Events.css"
 
 export default function Events() {
-
-    const [groups, setGroups] = useState([])
-    const [events, setEvents] = useState([])
-    const [loading, setLoading] = useState(true)
-
-    function fetchGroups() {
-        fetch("/api/groups")
-        .then(res => {
-            return res.json()
-        })
-        .then(data => {
-            setGroups(data)
-        })
-    }
+    const dispatch = useDispatch()
+    const events = useSelector(state => state.events.allEvents)
+    const groups = useSelector(state => state.groups)
+    const [loaded, setLoaded] = useState(false)
+    
+    useEffect(() => {
+        dispatch(eventActions.getEvents())
+        .then(groupActions.getGroups())
+        .then(() => setLoaded(true))
+      }, [dispatch]);
 
     useEffect(() => {
-        fetchGroups()
+        //get curr group here??
+    }, [loaded])
+      console.log(events)
 
-        const groupEvents = async () => {
-            groups?.forEach(async (group) => {
-                await fetch(`/api/groups/${group.id}/events`)
-                .then(res => {
-                    return res.json()
-                })
-                .then(data => {
-                    setEvents(data)
-                })
-            })
-        }
-        groupEvents()
-        setLoading(false)
-    }, [])
-
-    groups.forEach((group) => {
-        console.log(group.private)
-    })
-
+    if (loaded && events) {
     return (
         <>
         <div className="select">
@@ -49,23 +30,26 @@ export default function Events() {
             <NavLink to="/groups">Groups</NavLink>
         </div>
         <div className="caption">
-            Groups in getTogether
+            <h3>Events in getTogether</h3>
         </div>
-            {!loading && groups?.map((group, idx) => {
+            {events?.map((event, idx) => {
                 return (
-                    <li key={idx} className="group">
-                        <li key={`${idx}-img`}><img src={group.previewImage} alt="group img" /></li>
-                        <li key={`${idx}-name`}>{group.name}</li>
-                        <li key={`${idx}-city`}>{group.city}, {group.state}</li>
-                        <li key={`${idx}-about`}>{group.about}</li>
-                        <li key={`${idx}-events`}>{events.length} events ·
-                        {group.private && <div>Private</div>}
-                        {!group.private && <div>Public</div>}
+                    <NavLink to={`/event/${event.id}`} className="event-detail-link">
+                    <li key={idx} className="event">
+                        <li key={`${idx}-img`}><img src={event.previewImage} alt="group img" /></li>
+                        <li key={`${idx}-name`}>{event.name}</li>
+                        <li key={`${idx}-city`}>{event.city}, {event.state}</li>
+                        <li key={`${idx}-about`}>{event.about}</li>
+                        <li key={`${idx}-events`}>
+                        {event.private && <div>Private</div>}
+                        {!event.private && <div>Public</div>}
                         </li>
                         <hr></hr>
                     </li>
+                    </NavLink>
                 )
             })}
         </>
     )
+}
 }

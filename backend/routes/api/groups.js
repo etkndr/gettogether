@@ -401,7 +401,7 @@ router.post("/:id/events", async (req,res,next) => {
         return next(err)
     }
 
-    if (!name || !type || !capacity || !startDate || !endDate || !description || !price) {
+    if (!name || !type || !capacity || !startDate || !endDate || !description || price < 0) {
         const err = new Error("Requires name, type, capacity, start, end, description, and price")
         err.status = 400
         return next(err)

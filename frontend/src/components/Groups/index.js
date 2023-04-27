@@ -6,37 +6,6 @@ import * as eventActions from "../../store/events"
 import "./Groups.css"
 
 export default function Groups() {
-    // const [groups, setGroups] = useState([])
-    // const [events, setEvents] = useState([])
-    // const [loading, setLoading] = useState(true)
-
-    // function fetchGroups() {
-    //     fetch("/api/groups")
-    //     .then(res => {
-    //         return res.json()
-    //     })
-    //     .then(data => {
-    //         setGroups(data)
-    //     })
-    // }
-
-    // function fetchEvents() {
-    //     fetch("/api/events")
-    //     .then(res => {
-    //         return res.json()
-    //     })
-    //     .then(data => {
-    //         setEvents(data)
-    //     })
-    // }
-
-    // useEffect(() => {
-    //     fetchGroups()
-    //     fetchEvents()
-    //     setLoading(false)
-
-    // }, [])
-    
     const dispatch = useDispatch()
     
     useEffect(() => {
@@ -77,7 +46,7 @@ export default function Groups() {
             <NavLink to="/groups">Groups</NavLink>
         </div>
         <div className="caption">
-            Groups in getTogether
+            <h3>Groups in getTogether</h3>
         </div>
             {groups?.map((group, idx) => {
                 return (

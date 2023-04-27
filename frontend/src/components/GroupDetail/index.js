@@ -79,17 +79,17 @@ export default function GroupDetail() {
             {group?.Organizer?.lastName}
             </div>
 
-            {sessionUser && sessionUser.id !== group.Organizer.id &&
+            {sessionUser && sessionUser.id !== group?.Organizer?.id &&
             <button onClick={popup}>Join this group</button>
             }
 
-            {sessionUser && sessionUser.id === group.Organizer.id && 
+            {sessionUser && sessionUser.id === group?.Organizer?.id && 
             <button onClick={createEvent}>Create event</button>}
 
-            {sessionUser && sessionUser.id === group.Organizer.id &&
+            {sessionUser && sessionUser.id === group?.Organizer?.id &&
             <button onClick={updateGroup}>Update</button>}
 
-            {sessionUser && sessionUser.id === group.Organizer.id &&
+            {sessionUser && sessionUser.id === group?.Organizer?.id &&
             <button onClick={dltGroup}>Delete</button>}
 
             <h3>What we're about</h3>
