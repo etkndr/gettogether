@@ -2,7 +2,7 @@ const initState = {}
 
 const LOAD_EVENTS = "events/loadEvents"
 const GROUP_EVENTS = "events/groupEvents"
-const CLEAR_DATA = "events/clear"
+const ONE_EVENT = "events/oneEvent"
 
 const load = events => ({
     type: LOAD_EVENTS,
@@ -14,11 +14,10 @@ const groupEvents = events => ({
     events
 })
 
-export const clear = () => {
-    return {
-        type: CLEAR_DATA
-    }
-}
+const oneEvent = event => ({
+    type: ONE_EVENT,
+    event
+})
 
 export const getEvents = () => async dispatch => {
     const res = await fetch("/api/events")
@@ -38,15 +37,18 @@ export const getGroupEvents = (id) => async dispatch => {
     }
 }
 
+export const getOneEvent = (id) => async dispatch => {
+    const res = await fetch(`/api/events/${id}`)
+
+    if (res.ok) {
+        const event = await res.json()
+        dispatch(oneEvent(event))
+    }
+}
+
 export default function eventReducer(state = initState, action) {
-    let groupEvents = []
+    const newState = {...state}
 switch(action.type) {
-    case CLEAR_DATA:
-        groupEvents = null
-        return {
-            ...state,
-            groupEvents
-        }
     case LOAD_EVENTS:
         const allEvents = {}
         action.events.forEach((event) => {
@@ -56,8 +58,10 @@ switch(action.type) {
             ...allEvents,
             ...state
         }
+    case ONE_EVENT:
+        newState.currEvent = action.event
+        return newState
     case GROUP_EVENTS:
-        const newState = {...state}
         newState.groupEvents = action.events
         return newState
     default:

@@ -118,7 +118,7 @@ router.get("/:id", async (req,res,next) => {
                 model: Attendance, as: "numAttending", attributes: [], duplicating: false
             },
             {
-                model: Group, attributes: ["id", "name", "city", "state"], duplicating: false
+                model: Group, attributes: ["id", "name", "city", "state", "organizerId"], duplicating: false
             },
             {
                 model: Venue, attributes: ["id", "city", "state"], duplicating: false

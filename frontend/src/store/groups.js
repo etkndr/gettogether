@@ -17,6 +17,7 @@ export const getGroups = () => async dispatch => {
 }
 
 export default function groupReducer(state = initState, action) {
+    const newState = {...state}
 switch(action.type) {
     case LOAD_GROUPS:
         const allGroups = {}

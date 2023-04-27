@@ -9,6 +9,7 @@ import * as sessionActions from "./store/session";
 import Groups from "./components/Groups";
 import Events from "./components/Events"
 import GroupDetail from "./components/GroupDetail"
+import EventDetail from "./components/EventDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +35,9 @@ function App() {
           </Route>
           <Route path={`/group/:id`}>
             <GroupDetail />
+          </Route>
+          <Route path={`/event/:id`}>
+            <EventDetail />
           </Route>
         </Switch>
       )}

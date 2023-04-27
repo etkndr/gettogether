@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { NavLink, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
-import { getGroupEvents} from "../../store/events"
+import { getGroupEvents } from "../../store/events"
 import "./detail.css"
 
 export default function GroupDetail() {
@@ -99,6 +99,7 @@ export default function GroupDetail() {
             {sorted?.map((event) => {
                 return (
                     <div className="event">
+                        <NavLink to={`/event/${event.id}`}>
                         <img src={event.previewImage} alt="preview"></img>
                         <p>{event.description}</p>
                     <li key={event?.id}>
@@ -106,6 +107,7 @@ export default function GroupDetail() {
                         <p>{event?.name}</p>
                         <p>{event.Group.city}, {event.Group.state}</p>
                     </li>
+                    </NavLink>
                     </div>
                 )
             })}
@@ -113,6 +115,7 @@ export default function GroupDetail() {
             {past?.map((event) => {
                     return (
                         <div className="event">
+                         <NavLink to={`/event/${event.id}`}>
                             <img src={event.previewImage} alt="preview"></img>
                             <p>{event.description}</p>
                         <li key={event?.id}>
@@ -120,6 +123,7 @@ export default function GroupDetail() {
                             <p>{event?.name}</p>
                             <p>{event.Group.city}, {event.Group.state}</p>
                         </li>
+                        </NavLink>
                         </div>
                 ) 
             })}
