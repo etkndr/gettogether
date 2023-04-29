@@ -3,7 +3,7 @@ import { NavLink, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
-import "./detail.css"
+import "./GroupDetail.css"
 import { convertTime } from "../../App"
 
 export default function GroupDetail() {

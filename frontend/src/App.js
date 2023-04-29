@@ -10,6 +10,7 @@ import Groups from "./components/Groups";
 import Events from "./components/Events"
 import GroupDetail from "./components/GroupDetail"
 import EventDetail from "./components/EventDetail";
+import StartGroup from "./components/StartGroup";
 
 export function convertTime(dateTime) {
   let date = new Date(dateTime)
@@ -51,6 +52,9 @@ function App() {
           </Route>
           <Route path={`/event/:id`}>
             <EventDetail />
+          </Route>
+          <Route path="/new-group">
+            <StartGroup />
           </Route>
         </Switch>
       )}

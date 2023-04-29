@@ -7,10 +7,28 @@ import findImg from "../../assets/ticket.svg"
 import startImg from "../../assets/joinGroup.svg"
 import * as sessionActions from "../../store/session"
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import SignupFormPage from "../SignupFormPage";
 
 export default function LandingPage() {
 
     const sessionUser = useSelector(state => state.session.user)
+    const [loginClass, setLoginClass] = useState("login-modal-hidden")
+    const [signupClass, setSignupClass] = useState("signup-modal-hidden")
+    const [clearData, setClearData] = useState(false)
+
+    function showSignupModal(e) {
+        e.preventDefault()
+        setSignupClass("signup-modal")
+        setClearData(false)
+      }
+      
+      function hideModal(e) {
+        e.preventDefault()
+        setLoginClass("login-modal-hidden")
+        setSignupClass("signup-modal-hidden")
+        setClearData(true);
+      }
 
     let startGroupClass
     if (sessionUser) {
@@ -73,18 +91,24 @@ export default function LandingPage() {
                 <div className="start-img">
                     <img src={startImg}/>
                 </div>
-                <Link to="/groups/new" className={startGroupClass}>Start a group</Link>
+                <Link to="/new-group" className={startGroupClass}>Start a group</Link>
                 <p>
                     You don't have to be an expert to gather people together and explore shared interests.
                 </p>
             </div>
 
             <div className="join">
-                <a href="/signup">
-                <button>
+                {!sessionUser && 
+                <button onClick={showSignupModal}>
                     Join getTogether
                 </button>
-                </a>
+            }
+            </div>
+            <div className={signupClass}>
+                <div className='signup-modal-content'>
+                <button className='close-modal' onClick={hideModal}>X</button>
+                <SignupFormPage clearData={clearData} />
+                </div>
             </div>
         </div>
     )

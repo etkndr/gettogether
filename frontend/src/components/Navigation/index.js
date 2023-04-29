@@ -46,9 +46,18 @@ function Navigation({ isLoaded }) {
     let navBorder
     if (sessionUser) {
         sessionLinks = (
-            <li className='profile-btn'>
-        <ProfileButton user={sessionUser} />
-      </li>
+          <>
+          <div className='session-links'>
+            <li className='nav-link'>
+              <NavLink to="/new-group">
+                <button>Start new group</button>
+              </NavLink>
+            </li>
+          </div>
+          <li className='profile-btn'>
+            <ProfileButton user={sessionUser} />
+          </li>
+          </>
     );
     
     navBorder = "main-nav"
