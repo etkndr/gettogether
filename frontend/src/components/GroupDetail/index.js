@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
 import "./detail.css"
+import { convertTime } from "../../App"
 
 export default function GroupDetail() {
     const dispatch = useDispatch()
@@ -17,18 +18,6 @@ export default function GroupDetail() {
         await fetch(`/api/groups/${id}`)
         .then(res => res.json())
         .then(data => setGroup(data))
-    }
-
-    function convertTime(dateTime) {
-        let date = new Date(dateTime)
-        let slicedDate = date.toDateString()
-        let slicedTime = date.toTimeString()
-        let hrs = slicedTime.slice(0,2)
-        let mins = slicedTime.slice(3,5)
-        let amPm = hrs >= 12 ? "pm" : "am"
-        if (hrs > 12) hrs = hrs % 12
-        
-        return `${slicedDate} · ${hrs}:${mins} ${amPm}`
     }
     
     function popup() {
@@ -101,11 +90,11 @@ export default function GroupDetail() {
                     <div className="event">
                         <NavLink to={`/event/${event.id}`}>
                         <img src={event.previewImage} alt="preview"></img>
-                        <p>{event.description}</p>
                     <li key={event?.id}>
                         <p>{convertTime(event.startDate)}</p>
                         <p>{event?.name}</p>
                         <p>{event.Group.city}, {event.Group.state}</p>
+                        <p>{event.description}</p>
                     </li>
                     </NavLink>
                     </div>

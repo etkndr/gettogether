@@ -11,6 +11,18 @@ import Events from "./components/Events"
 import GroupDetail from "./components/GroupDetail"
 import EventDetail from "./components/EventDetail";
 
+export function convertTime(dateTime) {
+  let date = new Date(dateTime)
+  let slicedDate = date.toDateString()
+  let slicedTime = date.toTimeString()
+  let hrs = slicedTime.slice(0,2)
+  let mins = slicedTime.slice(3,5)
+  let amPm = hrs >= 12 ? "pm" : "am"
+  if (hrs > 12) hrs = hrs % 12
+  
+  return `${slicedDate} · ${hrs}:${mins} ${amPm}`
+}
+
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -18,6 +30,7 @@ function App() {
     dispatch(sessionActions.restoreUser())
     setIsLoaded(true);
   }, [dispatch]);
+
 
   return (
     <>

@@ -3,6 +3,7 @@ import { NavLink, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getOneEvent } from "../../store/events"
+import {convertTime} from "../../App"
 
 export default function EventDetail () {
     const dispatch = useDispatch()
@@ -11,18 +12,6 @@ export default function EventDetail () {
     const event = useSelector(state => state.events.currEvent)
     const [group, setGroup] = useState()
     const [loaded, setLoaded] = useState(false)
-
-    function convertTime(dateTime) {
-        let date = new Date(dateTime)
-        let slicedDate = date.toDateString()
-        let slicedTime = date.toTimeString()
-        let hrs = slicedTime.slice(0,2)
-        let mins = slicedTime.slice(3,5)
-        let amPm = hrs >= 12 ? "pm" : "am"
-        if (hrs > 12) hrs = hrs % 12
-        
-        return `${slicedDate} · ${hrs}:${mins} ${amPm}`
-    }
 
     let hostButtons
     if (sessionUser && sessionUser.id === group?.Organizer?.id) {
