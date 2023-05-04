@@ -1,11 +1,21 @@
+import { csrfFetch } from "./csrf"
+
 const initState = {}
 
 const LOAD_GROUPS = "groups/loadGroups"
+const NEW_GROUP = "groups/newGroup"
 
 const load = groups => ({
     type: LOAD_GROUPS,
     groups
 })
+
+const newGroup = group => {
+    return {
+        type: NEW_GROUP,
+        group
+    }
+}
 
 export const getGroups = () => async dispatch => {
     const res = await fetch("/api/groups")
@@ -16,18 +26,36 @@ export const getGroups = () => async dispatch => {
     }
 }
 
+export const createNewGroup = (group) => async dispatch => {
+    const {name, about, type, privacy, city, state} = group
+    const res = await csrfFetch("/api/groups", {
+        method: "POST",
+        body: JSON.stringify({
+            name,
+            about,
+            type,
+            privacy,
+            city, 
+            state
+        })
+    })
+
+    if (res.ok) {
+        const newGroup = await res.json()
+        dispatch(newGroup(newGroup))
+        return newGroup
+    }
+}
+
 export default function groupReducer(state = initState, action) {
     const newState = {...state}
 switch(action.type) {
     case LOAD_GROUPS:
-        const allGroups = {}
-        action.groups.forEach(group => {
-            allGroups[group.id] = group
-        })
-        return {
-            ...allGroups,
-            ...state
-        }
+        newState.allGroups = action.groups
+        return newState
+    case NEW_GROUP:
+        newState.allGroups.push(action.group)
+        return newState
     default:
         return state
 }

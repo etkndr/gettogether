@@ -7,37 +7,27 @@ import "./Groups.css"
 
 export default function Groups() {
     const dispatch = useDispatch()
+    const groups = useSelector(state => state.groups.allGroups)
+    const events = useSelector(state => state.events.allEvents)
     
     useEffect(() => {
         dispatch(groupActions.getGroups())
         dispatch(eventActions.getEvents())
       }, [dispatch]);
-    
-      
-      const groupState = useSelector(state => state.groups)
-      const groups = []
-      Object.keys(groupState).forEach((id) => {
-          groups.push(groupState[id])
-        })
         
-        const eventState = useSelector(state => state.events)
-        const events = []
-        Object.keys(eventState).forEach((id) => {
-            events.push(eventState[id])
-        })
         
-        const numEvents = {}
-        groups?.forEach((group) => {
-            events?.forEach((event) => {
-                if (event.groupId === group.id) {
-                    if (numEvents[group.id]) {
-                        numEvents[group.id]++
-                    } else {
-                        numEvents[group.id] = 1
-                    }
+    const numEvents = {}
+    groups?.forEach((group) => {
+        events?.forEach((event) => {
+            if (event.groupId === group.id) {
+                if (numEvents[group.id]) {
+                    numEvents[group.id]++
+                } else {
+                    numEvents[group.id] = 1
                 }
-            })
+            }
         })
+    })
 
     return (
         <>
