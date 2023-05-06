@@ -3,17 +3,20 @@ import { NavLink, useParams, useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
-import "./GroupDetail.css"
 import { convertTime } from "../../App"
+import DeleteGroup from "../DeleteGroup"
+import "./GroupDetail.css"
+import "../DeleteGroup/DeleteGroup.css"
 
 export default function GroupDetail() {
     const dispatch = useDispatch()
     const history = useHistory()
+    const {id} = useParams()
     const sessionUser = useSelector(state => state.session.user)
+    const allEvents = useSelector(state => state.events.groupEvents)
     const [loaded, setLoaded] = useState(false)
     const [group, setGroup] = useState()
-    const {id} = useParams()
-    const allEvents = useSelector(state => state.events.groupEvents)
+    const [dltClass, setDltClass] = useState("dlt-modal-hidden")
 
     const currGroup = async () => {
         await fetch(`/api/groups/${id}`)
@@ -33,6 +36,16 @@ export default function GroupDetail() {
         
     }
     
+    function showDeleteModal(e) {
+        e.preventDefault()
+        setDltClass("dlt-modal")
+      }
+      
+    function hideModal(e) {
+        e.preventDefault()
+        setDltClass("dlt-modal-hidden")
+      }
+
     function dltGroup() {
         dispatch(groupActions.dltGroup(id))
         history.push("/groups")
@@ -81,7 +94,16 @@ export default function GroupDetail() {
             <button onClick={updateGroup}>Update</button>}
 
             {sessionUser && sessionUser.id === group?.Organizer?.id &&
-            <button onClick={dltGroup}>Delete</button>}
+            <button onClick={showDeleteModal}>Delete</button>}
+
+            <div className={dltClass}>
+                <div className="dlt-modal-content">
+                <button className='close-modal' onClick={hideModal}>X</button>
+                <DeleteGroup name={group?.name} id={id} />
+                <button onClick={dltGroup}>Yes, delete group</button>
+                <button onClick={hideModal}>No, keep going</button>
+                </div>
+            </div>
 
             <h3>What we're about</h3>
             {group?.about}
