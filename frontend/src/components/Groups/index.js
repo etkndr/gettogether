@@ -40,16 +40,16 @@ export default function Groups() {
         </div>
             {groups?.map((group, idx) => {
                 return (
-                    <NavLink to={`/group/${group.id}`} className="group-detail-link">
+                    <NavLink to={`/group/${group?.id}`} className="group-detail-link">
                     <li key={idx} className="group">
-                        <li key={`${idx}-img`}><img src={group.previewImage} alt="group img" /></li>
-                        <li key={`${idx}-name`}>{group.name}</li>
-                        <li key={`${idx}-city`}>{group.city}, {group.state}</li>
-                        <li key={`${idx}-about`}>{group.about}</li>
-                        {numEvents[group.id] || 0} events ·
+                        <li key={`${idx}-img`}><img src={group?.previewImage} alt="group img" /></li>
+                        <li key={`${idx}-name`}>{group?.name}</li>
+                        <li key={`${idx}-city`}>{group?.city}, {group?.state}</li>
+                        <li key={`${idx}-about`}>{group?.about}</li>
+                        {numEvents[group?.id] || 0} events ·
                         <li key={`${idx}-events`}>
-                        {group.private && <div>Private</div>}
-                        {!group.private && <div>Public</div>}
+                        {group?.private && <div>Private</div>}
+                        {!group?.private && <div>Public</div>}
                         </li>
                         <hr></hr>
                     </li>

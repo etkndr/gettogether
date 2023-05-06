@@ -1,9 +1,11 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import * as groupActions from "../../store/groups"
+import { useHistory } from "react-router-dom"
 
 export default function StartGroup() {
     const dispatch = useDispatch()
+    const history = useHistory()
     const [location, setLocation] = useState("")
     const [name, setName] = useState("")
     const [about, setAbout] = useState("")
@@ -13,10 +15,33 @@ export default function StartGroup() {
     const [privacy, setPrivacy] = useState(true)
     const [image, setImage] = useState("")
     const [errors, setErrors] = useState([])
+    const [disabled, setDisabled] = useState(true)
+
+    useEffect(() => {
+        if (
+            name.length &&
+            about.length &&
+            city.length &&
+            state.length &&
+            image.length &&
+            !errors.length
+        ) {
+            setDisabled(false)
+        }
+    }, [name, about, city, state, image, errors])
+
+    const newGroup = (group) => {
+        dispatch(groupActions.createNewGroup(group)).then((res) => {
+            history.push(`/group/${res.id}`)
+        }).catch(async (res) => {
+            const data = await res.json()
+            if (data && data.errors) setErrors(data.errors)
+        })
+    }
     
     const onSubmit = async (e) => {
         e.preventDefault()
-        console.log(city, state)
+        let err = []
 
         const group = {
             name,
@@ -24,24 +49,21 @@ export default function StartGroup() {
             type,
             private: !!privacy,
             city,
-            state,
+            state: state.toUpperCase(),
             previewImage: image
         }
 
-        dispatch(groupActions.createNewGroup(group)).catch(async (res) => {
-            const data = await res.json()
-            if (data && data.errors) {
-                setErrors(data.errors)
-            }
-        })
-        return group
+        return newGroup(group)
     }
 
 
     return (
         <div>
             <h2>Start a new group</h2>
-            <form onClick={onSubmit}>
+            <form onSubmit={onSubmit}>
+            <ul>
+                        {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
+                    </ul>
             <div>
                 <h3>
                     Set your group's location
@@ -115,7 +137,7 @@ export default function StartGroup() {
                 </input>
             </div>
 
-            <button type="submit">Create group</button>
+            <button type="submit" disabled={disabled}>Create group</button>
             </form>
         </div>
     )

@@ -41,9 +41,9 @@ export const createNewGroup = (group) => async dispatch => {
     })
 
     if (res.ok) {
-        const newGroup = await res.json()
-        dispatch(newGroup(newGroup))
-        return newGroup
+        const data = await res.json()
+        dispatch(newGroup(data))
+        return data
     }
 }
 
@@ -54,7 +54,7 @@ switch(action.type) {
         newState.allGroups = action.groups
         return newState
     case NEW_GROUP:
-        newState.allGroups.push(action.group)
+        newState.allGroups = [newState.allGroups, action.group]
         return newState
     default:
         return state
