@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NavLink, useParams } from "react-router-dom"
+import { NavLink, useParams, useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
@@ -8,6 +8,7 @@ import { convertTime } from "../../App"
 
 export default function GroupDetail() {
     const dispatch = useDispatch()
+    const history = useHistory()
     const sessionUser = useSelector(state => state.session.user)
     const [loaded, setLoaded] = useState(false)
     const [group, setGroup] = useState()
@@ -33,7 +34,8 @@ export default function GroupDetail() {
     }
     
     function dltGroup() {
-        
+        dispatch(groupActions.dltGroup(id))
+        history.push("/groups")
     }
     
     useEffect(() => {
