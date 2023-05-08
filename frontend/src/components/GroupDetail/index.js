@@ -4,9 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
 import { convertTime } from "../../App"
-import DeleteGroup from "../DeleteGroup"
 import "./GroupDetail.css"
-import "../DeleteGroup/DeleteGroup.css"
 
 export default function GroupDetail() {
     const dispatch = useDispatch()
@@ -33,7 +31,7 @@ export default function GroupDetail() {
     }
 
     function updateGroup() {
-        
+        history.push(`/group/edit/${id}`)
     }
     
     function showDeleteModal(e) {
@@ -99,7 +97,8 @@ export default function GroupDetail() {
             <div className={dltClass}>
                 <div className="dlt-modal-content">
                 <button className='close-modal' onClick={hideModal}>X</button>
-                <DeleteGroup name={group?.name} id={id} />
+                <h3>Confirm delete</h3>
+                <p>Are you sure you want to remove group {group?.name}?</p>
                 <button onClick={dltGroup}>Yes, delete group</button>
                 <button onClick={hideModal}>No, keep going</button>
                 </div>
@@ -112,13 +111,13 @@ export default function GroupDetail() {
             {sorted?.map((event) => {
                 return (
                     <div className="event">
-                        <NavLink to={`/event/${event.id}`}>
-                        <img src={event.previewImage} alt="preview"></img>
+                        <NavLink to={`/event/${event?.id}`}>
+                        <img src={event?.previewImage} alt="preview"></img>
                     <li key={event?.id}>
-                        <p>{convertTime(event.startDate)}</p>
+                        <p>{convertTime(event?.startDate)}</p>
                         <p>{event?.name}</p>
-                        <p>{event.Group.city}, {event.Group.state}</p>
-                        <p>{event.description}</p>
+                        <p>{event?.Group.city}, {event?.Group.state}</p>
+                        <p>{event?.description}</p>
                     </li>
                     </NavLink>
                     </div>
@@ -128,13 +127,13 @@ export default function GroupDetail() {
             {past?.map((event) => {
                     return (
                         <div className="event">
-                         <NavLink to={`/event/${event.id}`}>
-                            <img src={event.previewImage} alt="preview"></img>
-                            <p>{event.description}</p>
+                         <NavLink to={`/event/${event?.id}`}>
+                            <img src={event?.previewImage} alt="preview"></img>
+                            <p>{event?.description}</p>
                         <li key={event?.id}>
-                            <p>{convertTime(event.startDate)}</p>
+                            <p>{convertTime(event?.startDate)}</p>
                             <p>{event?.name}</p>
-                            <p>{event.Group.city}, {event.Group.state}</p>
+                            <p>{event?.Group.city}, {event?.Group.state}</p>
                         </li>
                         </NavLink>
                         </div>
