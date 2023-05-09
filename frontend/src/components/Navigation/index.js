@@ -49,7 +49,7 @@ function Navigation({ isLoaded }) {
           <>
           <div className='session-links'>
             <li className='nav-link'>
-              <NavLink to="/new-group">
+              <NavLink to="/group/new">
                 <button>Start new group</button>
               </NavLink>
             </li>

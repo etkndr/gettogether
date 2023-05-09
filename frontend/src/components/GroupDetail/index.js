@@ -27,7 +27,7 @@ export default function GroupDetail() {
     }
 
     function createEvent() {
-
+        history.push(`/new-event/${id}`)
     }
 
     function updateGroup() {
