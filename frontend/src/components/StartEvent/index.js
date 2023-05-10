@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
-import * as groupActions from "../../store/groups"
 import { useHistory, useParams } from "react-router-dom"
+import * as groupActions from "../../store/groups"
+import * as eventActions from "../../store/events"
 
 export default function StartEvent() {
     const dispatch = useDispatch()
@@ -23,21 +24,25 @@ export default function StartEvent() {
         dispatch(groupActions.getOneGroup(id))
     }, [dispatch])
 
-    console.log(group)
     useEffect(() => {
         if (
             name.length &&
             about.length &&
-
+            price.length &&
+            start.length &&
+            end.length &&
+            image.length &&
             !errors.length
         ) {
             setDisabled(false)
+        } else {
+            setDisabled(true)
         }
-    }, [name, errors])
+    }, [name, about, price, start, end, image, errors])
 
-    const newGroup = (group) => {
-        dispatch(groupActions.createNewGroup(group)).then((res) => {
-            history.push(`/group/${res.id}`)
+    const newEvent = (event) => {
+        dispatch(eventActions.createEvent(event)).then((res) => {
+            history.push(`/event/${res.id}`)
         }).catch(async (res) => {
             const data = await res.json()
             if (data && data.errors) setErrors(data.errors)
@@ -48,17 +53,24 @@ export default function StartEvent() {
         e.preventDefault()
         let err = []
 
-        const group = {
-            name
+        const event = {
+            name,
+            about,
+            price,
+            private: privacy,
+            stardDate: start,
+            endDate: end,
+            type,
+            image
         }
-
-        return newGroup(group)
+        
+        return newEvent(event)
     }
 
 
     return (
         <div>
-            <h2>Create a new event for {group.name}</h2>
+            <h2>Create a new event for {group?.name}</h2>
             <form onSubmit={onSubmit}>
             <ul>
                         {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
