@@ -9,9 +9,9 @@ export default function StartEvent() {
     const history = useHistory()
     const { id } = useParams()
     const group = useSelector(state => state.groups.currGroup)
-    const [price, setPrice] = useState(0)
+    const [price, setPrice] = useState()
     const [name, setName] = useState("")
-    const [about, setAbout] = useState("")
+    const [description, setDescription] = useState("")
     const [type, setType] = useState("In person")
     const [start, setStart] = useState("")
     const [end, setEnd] = useState("")
@@ -27,26 +27,42 @@ export default function StartEvent() {
     useEffect(() => {
         if (
             name.length &&
-            about.length &&
-            price.length &&
+            description.length &&
+            price &&
+            price >= 0 &&
             start.length &&
             end.length &&
             image.length &&
             !errors.length
         ) {
             setDisabled(false)
-        } else {
-            setDisabled(true)
         }
-    }, [name, about, price, start, end, image, errors])
+    }, [name, description, price, start, end, image, errors])
 
     const newEvent = (event) => {
-        dispatch(eventActions.createEvent(event)).then((res) => {
+        dispatch(eventActions.createEvent(id, event)).then((res) => {
+            dispatch(eventActions.addImg(res.id, image))
             history.push(`/event/${res.id}`)
         }).catch(async (res) => {
             const data = await res.json()
             if (data && data.errors) setErrors(data.errors)
         })
+    }
+
+    const convertTime = (input) => {
+        const split = input.split(", ")
+        const formatDate = split[0].slice(6).concat("-", split[0].slice(0, 5))
+        const amPm = split[1].slice(6).toUpperCase()
+        let formatTime
+        if (amPm === "PM") {
+            formatTime = (Number(split[1].slice(0,2)) + 12)
+            .toString().concat(split[1].slice(2,5), ":00")
+        } else {
+            formatTime = split[1].slice(0,5).concat(":00")
+        }
+        
+        const date = formatDate.concat(" ", formatTime)
+        return date
     }
     
     const onSubmit = async (e) => {
@@ -55,11 +71,11 @@ export default function StartEvent() {
 
         const event = {
             name,
-            about,
+            description,
             price,
             private: privacy,
-            stardDate: start,
-            endDate: end,
+            startDate: convertTime(start),
+            endDate: convertTime(end),
             type,
             image
         }
@@ -125,7 +141,7 @@ export default function StartEvent() {
                     type="text"
                     value={start} 
                     onChange={(e) => setStart(e.target.value)}
-                    placeholder="MM/DD/YYYY, HH/mm AM"></input>
+                    placeholder="MM-DD-YYYY, HH:mm AM"></input>
             </div>
 
             <div>
@@ -136,7 +152,7 @@ export default function StartEvent() {
                     type="text"
                     value={end} 
                     onChange={(e) => setEnd(e.target.value)}
-                    placeholder="MM/DD/YYYY, HH/mm PM"></input>
+                    placeholder="MM-DD-YYYY, HH:mm PM"></input>
             </div>
 
             <div>
@@ -156,8 +172,8 @@ export default function StartEvent() {
                 </h3>
                 <input 
                     type="text"
-                    value={about} 
-                    onChange={(e) => setAbout(e.target.value)}
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)}
                     placeholder="Please include at least 30 characters"></input>
             </div>
             <button type="submit" disabled={disabled}>Create event</button>

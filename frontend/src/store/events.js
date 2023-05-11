@@ -7,6 +7,7 @@ const GROUP_EVENTS = "events/groupEvents"
 const ONE_EVENT = "events/oneEvent"
 const NEW_EVENT = "events/newEvent"
 const DELETE_EVENT = "events/delete"
+const ADD_IMG = "events/image"
 
 const load = events => ({
     type: LOAD_EVENTS,
@@ -23,7 +24,7 @@ const oneEvent = event => ({
     event
 })
 
-const newEvent = event => {
+const newEvent = (event) => {
     return {
         type: NEW_EVENT,
         event
@@ -34,6 +35,14 @@ const dlt = event => {
     return {
         type: DELETE_EVENT,
         event
+    }
+}
+
+const image = (id, image) => {
+    return {
+        type: ADD_IMG,
+        id,
+        image
     }
 }
 
@@ -64,20 +73,21 @@ export const getOneEvent = (id) => async dispatch => {
     }
 }
 
-export const createEvent = (event) => async dispatch => {
-    const {name, about, price, start, end, type, privacy, image} = event
-    const res = await csrfFetch("/api/events", {
+export const createEvent = (id, event) => async dispatch => {
+    const {name, description, price, startDate, endDate, type, privacy, image} = event
+    const res = await csrfFetch(`/api/groups/${id}/events`, {
         method: "POST",
-        body: {
+        body: JSON.stringify({
+            venueId: 1,
+            capacity: 10,
             name,
-            about,
+            description,
             price,
-            start,
-            end,
+            startDate,
+            endDate,
             type,
             privacy,
-            image
-        }
+        })
     })
 
     if (res.ok) {
@@ -87,8 +97,24 @@ export const createEvent = (event) => async dispatch => {
     }
 }
 
+export const addImg = (id, img) => async dispatch => {
+    const res = await csrfFetch(`/api/events/${id}/images`, {
+        method: "POST",
+        body: JSON.stringify({
+            url: img,
+            preview: true
+        })
+    })
+
+    if (res.ok) {
+        const data = await res.json()
+        dispatch(image(id, data))
+        return data
+    }
+}
+
 export const dltEvent = (id) => async dispatch => {
-    const res = await csrfFetch(`events/${id}`, {
+    const res = await csrfFetch(`/api/events/${id}`, {
         method: "DELETE"
     })
 
@@ -113,6 +139,9 @@ switch(action.type) {
         return newState
     case NEW_EVENT:
         newState.allEvents[action.event.id] = action.event
+        return newState
+    case ADD_IMG:
+        newState.allEvents[action.id].images = action.image
         return newState
     case DELETE_EVENT:
         delete newState.allEvents[action.event.id]

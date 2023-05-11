@@ -30,7 +30,7 @@ export default function EventDetail () {
       }
 
     function dltEvent() {
-        dispatch(eventActions.dltEvent(id))
+        dispatch(eventActions.dltEvent(event?.id))
         history.push(`/group/${group.id}`)
     }
 
@@ -67,8 +67,8 @@ export default function EventDetail () {
                 <div className="dlt-modal-content">
                 <button className='close-modal' onClick={hideModal}>X</button>
                 <h3>Confirm delete</h3>
-                <p>Are you sure you want to remove group {group?.name}?</p>
-                <button onClick={dltEvent}>Yes, delete group</button>
+                <p>Are you sure you want to remove event {event?.name}?</p>
+                <button onClick={dltEvent}>Yes, delete event</button>
                 <button onClick={hideModal}>No, keep going</button>
                 </div>
             </div>
@@ -86,27 +86,27 @@ export default function EventDetail () {
             {group?.Organizer?.lastName}
                 </p>
                 <div>
-                    {event?.EventImages[0]}
+                    {event?.EventImages[0]?.url}
                 </div>
                 <div>
                     <h2>Event info</h2>
                     <div>
                         <i class="fa-regular fa-clock"></i>
                         <div>
-                        <p>START {convertTime(event.startDate)}</p>
-                        <p>END {convertTime(event.endDate)}</p>
+                        <p>START {convertTime(event?.startDate)}</p>
+                        <p>END {convertTime(event?.endDate)}</p>
                         </div>
                     </div>
                     <div>
                         <i class="fa-regular fa-dollar-sign"></i>
                         <div>
-                            {event.price || "FREE"}
+                            {event?.price || "FREE"}
                         </div>
                     </div>
                     <div>
                         <i class="fa-regular fa-location-dot"></i>
                         <div>
-                            {event.type}
+                            {event?.type}
                         </div>
                     </div>
                     <div>
@@ -114,7 +114,7 @@ export default function EventDetail () {
                             Description
                         </h3>
                         <div>
-                            {event.description}
+                            {event?.description}
                         </div>
                     </div>
                 </div>
