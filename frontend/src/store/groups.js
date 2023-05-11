@@ -7,6 +7,7 @@ const ONE_GROUP = "groups/oneGroup"
 const NEW_GROUP = "groups/newGroup"
 const DELETE_GROUP = "groups/deleteGroup"
 const EDIT_GROUP = "groups/editGroup"
+const ADD_IMG = "groups/image"
 
 const load = groups => {
     return {
@@ -40,6 +41,14 @@ const edit = group => {
     return {
         type: EDIT_GROUP,
         group
+    }
+}
+
+const image = (id, image) => {
+    return {
+        type: ADD_IMG,
+        id,
+        image
     }
 }
 
@@ -115,6 +124,22 @@ export const editGroup = (group, id) => async dispatch => {
     }
 }
 
+export const addImg = (id, img) => async dispatch => {
+    const res = await csrfFetch(`/api/groups/${id}/images`, {
+        method: "POST",
+        body: JSON.stringify({
+            url: img,
+            preview: true
+        })
+    })
+
+    if (res.ok) {
+        const data = await res.json()
+        dispatch(image(id, data))
+        return data
+    }
+}
+
 export default function groupReducer(state = initState, action) {
     const newState = {...state}
 switch(action.type) {
@@ -132,6 +157,9 @@ switch(action.type) {
         return newState
     case EDIT_GROUP:
         newState.allGroups[action.group.id] = action.group
+        return newState
+    case ADD_IMG:
+        newState.allGroups[action.id].image = action.image
         return newState
     default:
         return state

@@ -32,6 +32,7 @@ export default function StartGroup() {
 
     const newGroup = (group) => {
         dispatch(groupActions.createNewGroup(group)).then((res) => {
+            dispatch(groupActions.addImg(res.id, image))
             history.push(`/group/${res.id}`)
         }).catch(async (res) => {
             const data = await res.json()
