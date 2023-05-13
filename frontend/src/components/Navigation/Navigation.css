@@ -23,6 +23,10 @@ body {
     border-bottom: 0;
 }
 
+.session-links {
+    margin-right: 100px;
+}
+
 .links {
     display: flex;
     align-items: center;
@@ -76,6 +80,7 @@ button.profile {
     position: absolute;
     right: 10px;
     top: 5px;
+    cursor: pointer;
 }
 
 .profile-circle {

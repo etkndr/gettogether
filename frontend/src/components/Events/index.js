@@ -1,46 +1,38 @@
 import * as groupActions from "../../store/groups"
+import * as eventActions from "../../store/events"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
 import "./Events.css"
+import { convertTime } from "../../App"
 
 export default function Events() {
-
-    const [groups, setGroups] = useState([])
-    const [events, setEvents] = useState([])
-    const [loading, setLoading] = useState(true)
-
-    function fetchGroups() {
-        fetch("/api/groups")
-        .then(res => {
-            return res.json()
-        })
-        .then(data => {
-            setGroups(data)
-        })
-    }
+    const dispatch = useDispatch()
+    const events = useSelector(state => state.events.allEvents)
+    const groups = useSelector(state => state.groups)
+    const [currGroup, setCurrGroup] = useState()
+    const [loaded, setLoaded] = useState(false)
+    
+    useEffect(() => {
+        dispatch(eventActions.getEvents())
+        .then(() => setLoaded(true))
+      }, [dispatch]);
 
     useEffect(() => {
-        fetchGroups()
+        dispatch(groupActions.getGroups())
+    }, [loaded])
+    
+    if (loaded && events) {
+        let sorted = events.sort((e1, e2) => (e1.startDate > e2.startDate) ? 1 : (e1.startDate < e2.startDate) ? -1 : 0)
 
-        const groupEvents = async () => {
-            groups?.forEach(async (group) => {
-                await fetch(`/api/groups/${group.id}/events`)
-                .then(res => {
-                    return res.json()
-                })
-                .then(data => {
-                    setEvents(data)
-                })
-            })
-        }
-        groupEvents()
-        setLoading(false)
-    }, [])
-
-    groups.forEach((group) => {
-        console.log(group.private)
-    })
+        let past = []
+        
+        sorted = sorted.reduce((prev, curr) => {
+            let date = new Date(curr.startDate)
+            if (date < Date.now()) past.push(curr)
+            else prev.push(curr)
+            return prev
+        }, [])
 
     return (
         <>
@@ -49,23 +41,43 @@ export default function Events() {
             <NavLink to="/groups">Groups</NavLink>
         </div>
         <div className="caption">
-            Groups in getTogether
+            <h3>Events in getTogether</h3>
         </div>
-            {!loading && groups?.map((group, idx) => {
+        {sorted?.map((event) => {
                 return (
-                    <li key={idx} className="group">
-                        <li key={`${idx}-img`}><img src={group.previewImage} alt="group img" /></li>
-                        <li key={`${idx}-name`}>{group.name}</li>
-                        <li key={`${idx}-city`}>{group.city}, {group.state}</li>
-                        <li key={`${idx}-about`}>{group.about}</li>
-                        <li key={`${idx}-events`}>{events.length} events ·
-                        {group.private && <div>Private</div>}
-                        {!group.private && <div>Public</div>}
-                        </li>
-                        <hr></hr>
+                    <div className="event">
+                        <NavLink to={`/event/${event.id}`}>
+                        <img src={event.previewImage} alt="preview"></img>
+                    <li key={event?.id}>
+                        <p>{convertTime(event.startDate)}</p>
+                        <p>{event?.name}</p>
+                        <p>{event.Group.city}, {event.Group.state}</p>
+                        <p>{event.description}</p>
                     </li>
+                    </NavLink>
+                    <hr></hr>
+                    </div>
                 )
+            })}
+
+            {past.length > 0 && <h3>Past events</h3>}
+            {past?.map((event) => {
+                    return (
+                        <div className="event">
+                         <NavLink to={`/event/${event.id}`}>
+                            <img src={event.previewImage} alt="preview"></img>
+                            <p>{event.description}</p>
+                        <li key={event?.id}>
+                            <p>{convertTime(event.startDate)}</p>
+                            <p>{event?.name}</p>
+                            <p>{event.Group.city}, {event.Group.state}</p>
+                        </li>
+                        </NavLink>
+                        <hr></hr>
+                        </div>
+                ) 
             })}
         </>
     )
+}
 }

@@ -56,6 +56,7 @@
           <hr></hr>
           <li>
             <li className="profile-link"><NavLink to="/groups" className="profile-link">View groups</NavLink></li>
+            <li className="profile-link"><NavLink to="/events" className="profile-link">View events</NavLink></li>
           </li>
           <li>
             <button onClick={logout} className="logout">Log Out</button>
