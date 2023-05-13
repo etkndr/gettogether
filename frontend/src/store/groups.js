@@ -8,6 +8,7 @@ const NEW_GROUP = "groups/newGroup"
 const DELETE_GROUP = "groups/deleteGroup"
 const EDIT_GROUP = "groups/editGroup"
 const ADD_IMG = "groups/image"
+const DLT_IMG = "groups/dltImage"
 
 const load = groups => {
     return {
@@ -52,6 +53,14 @@ const image = (id, image) => {
     }
 }
 
+const dltImg = (id, img) => {
+    return {
+        type: DLT_IMG,
+        id,
+        img
+    }
+}
+
 export const getGroups = () => async dispatch => {
     const res = await fetch("/api/groups")
 
@@ -67,6 +76,7 @@ export const getOneGroup = (id) => async dispatch => {
     if (res.ok) {
         const group = await res.json()
         dispatch(getGroup(group))
+        return group
     }
 }
 
@@ -78,7 +88,7 @@ export const createNewGroup = (group) => async dispatch => {
             name,
             about,
             type,
-            privacy,
+            private: privacy,
             city, 
             state
         })
@@ -111,7 +121,7 @@ export const editGroup = (group, id) => async dispatch => {
             name,
             about,
             type,
-            privacy,
+            private: privacy,
             city, 
             state
         })
@@ -140,6 +150,18 @@ export const addImg = (id, img) => async dispatch => {
     }
 }
 
+export const deleteImage = (groupId, id) => async dispatch => {
+    const res = await csrfFetch(`/api/group-images/${id}`, {
+        method: "DELETE"
+    })
+
+    if (res.ok) {
+        const data = await res.json()
+        dispatch(dltImg(groupId, data))
+        return data
+    }
+}
+
 export default function groupReducer(state = initState, action) {
     const newState = {...state}
 switch(action.type) {
@@ -156,10 +178,13 @@ switch(action.type) {
         delete newState.allGroups[action.group.id]
         return newState
     case EDIT_GROUP:
-        newState.allGroups[action.group.id] = action.group
+        newState.currGroup = action.group
         return newState
     case ADD_IMG:
-        newState.allGroups[action.id].image = action.image
+        newState.currGroup.GroupImages = action.image
+        return newState
+    case DLT_IMG:
+        delete newState.currGroup.GroupImages[action.image.id]
         return newState
     default:
         return state

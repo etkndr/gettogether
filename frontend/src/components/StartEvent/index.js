@@ -42,7 +42,9 @@ export default function StartEvent() {
     const newEvent = (event) => {
         dispatch(eventActions.createEvent(id, event)).then((res) => {
             dispatch(eventActions.addImg(res.id, image))
+            .then(() => 
             history.push(`/event/${res.id}`)
+            )
         }).catch(async (res) => {
             const data = await res.json()
             if (data && data.errors) setErrors(data.errors)

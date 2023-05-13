@@ -67,8 +67,6 @@ export default function GroupDetail() {
             return prev
         }, [])
 
-        console.log(group)
-
     return (
         <div>
             <div><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>

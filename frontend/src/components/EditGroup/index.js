@@ -11,20 +11,36 @@ export default function EditGroup() {
     const group = useSelector(state => state.groups.currGroup)
     const sessionUser = useSelector(state => state.session.user)
 
-    const [location, setLocation] = useState(`${group?.city}, ${group?.state}`)
-    const [name, setName] = useState(group?.name)
-    const [about, setAbout] = useState(group?.about)
-    const [type, setType] = useState(group?.type)
-    const [city, setCity] = useState(group?.city)
-    const [state, setState] = useState(group?.state)
-    const [privacy, setPrivacy] = useState(group?.private)
-    const [image, setImage] = useState(group?.previewImage)
+    const [loaded, setLoaded] = useState(false)
+    const [location, setLocation] = useState()
+    const [name, setName] = useState()
+    const [about, setAbout] = useState()
+    const [type, setType] = useState()
+    const [city, setCity] = useState()
+    const [state, setState] = useState()
+    const [privacy, setPrivacy] = useState()
+    const [image, setImage] = useState()
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
         dispatch(groupActions.getOneGroup(id))
-    }, [dispatch])
+        .then(() => setLoaded(true))
+    }, [dispatch, id])
+
+    useEffect(() => {
+        if (loaded) {
+            setLocation(`${group?.city}, ${group?.state}`)
+            setName(group?.name)
+            setAbout(group?.about)
+            setType(group?.type)
+            setCity(group?.city)
+            setState(group?.state)
+            setPrivacy(group?.private)
+            setImage(group?.GroupImages[0]?.url)
+        }
+        console.log(group?.GroupImages[0]?.id)
+    }, [loaded, id])
 
     
     useEffect(() => {
@@ -42,9 +58,13 @@ export default function EditGroup() {
         }, [name, about, city, state, image, errors])
         
     const updateGroup = (group) => {
-        dispatch(groupActions.editGroup(group)).then((res) => {
+        dispatch(groupActions.editGroup(group, id))
+        .then((res) => {
+            // dispatch(groupActions.deleteImage(id, group?.GroupImages[0]?.id))
+            // .then(() => dispatch(groupActions.addImg(id, image)))
             history.push(`/group/${res.id}`)
-        }).catch(async (res) => {
+        })
+        .catch(async (res) => {
             const data = await res.json()
             if (data && data.errors) setErrors(data.errors)
         })
@@ -58,7 +78,7 @@ export default function EditGroup() {
             name,
             about,
             type,
-            private: !!privacy,
+            privacy: !!privacy,
             city,
             state: state.toUpperCase(),
             previewImage: image
@@ -70,6 +90,8 @@ export default function EditGroup() {
     if (!sessionUser) {
         history.push("/")
     }
+
+    if (loaded) {
     
     return (
         <div>
@@ -155,4 +177,5 @@ export default function EditGroup() {
             </form>
         </div>
     )
+}
 }

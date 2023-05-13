@@ -48,7 +48,7 @@ export default function StartGroup() {
             name,
             about,
             type,
-            private: !!privacy,
+            privacy: !!privacy,
             city,
             state: state.toUpperCase(),
             previewImage: image
