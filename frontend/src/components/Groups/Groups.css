@@ -33,7 +33,7 @@ hr, a hr {
 .caption h2{
     margin: 50px 20px 30px 0;
     font-size: 22pt;
-    letter-spacing: 1px;
+    letter-spacing: 0px;
 }
 
 .grp-name {

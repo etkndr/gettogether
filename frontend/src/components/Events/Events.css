@@ -1,4 +1,12 @@
+hr, a hr {
+    border: 1px solid gray;
+}
+
 .event {
     cursor: pointer;
     list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto;
+    grid-template-areas: "img info";
 }
