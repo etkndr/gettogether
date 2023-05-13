@@ -30,32 +30,35 @@ export default function Groups() {
     })
 
     return (
-        <>
+        <div className="content">
+        <div className="caption">
+        <h2>Groups in getTogether</h2>
+        </div>
         <div className="select">
             <NavLink to="/events">Events</NavLink>
             <NavLink to="/groups">Groups</NavLink>
         </div>
-        <div className="caption">
-            <h3>Groups in getTogether</h3>
-        </div>
+        <hr></hr>
             {groups?.map((group, idx) => {
                 return (
                     <NavLink to={`/group/${group?.id}`} className="group-detail-link">
-                    <li key={idx} className="group">
-                        <li key={`${idx}-img`}><img src={group?.previewImage} alt="group img" /></li>
-                        <li key={`${idx}-name`}>{group?.name}</li>
-                        <li key={`${idx}-city`}>{group?.city}, {group?.state}</li>
-                        <li key={`${idx}-about`}>{group?.about}</li>
+                    <div key={idx} className="group">
+                        <div key={`${idx}-img`} className="grp-img"><img src={group?.previewImage} alt="group img" /></div>
+                        <div key={`${idx}-info`} className="grp-info">
+                        <li key={`${idx}-name`} className="grp-name">{group?.name}</li>
+                        <li key={`${idx}-city`} className="grp-location">{group?.city}, {group?.state}</li>
+                        <li key={`${idx}-about`} className="grp-about">{group?.about}</li>
+                        <li key={`${idx}-events`} className="grp-about">
                         {numEvents[group?.id] || 0} events ·
-                        <li key={`${idx}-events`}>
-                        {group?.private && <div>Private</div>}
-                        {!group?.private && <div>Public</div>}
+                        {group?.private && " Private"}
+                        {!group?.private && " Public"}
                         </li>
+                        </div>
+                    </div>
                         <hr></hr>
-                    </li>
                     </NavLink>
                 )
             })}
-        </>
+        </div>
     )
 }
