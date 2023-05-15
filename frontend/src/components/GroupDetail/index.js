@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import { getGroupEvents } from "../../store/events"
 import { convertTime } from "../../App"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import "./GroupDetail.css"
 
 export default function GroupDetail() {
@@ -15,6 +16,7 @@ export default function GroupDetail() {
     const [loaded, setLoaded] = useState(false)
     const [group, setGroup] = useState()
     const [dltClass, setDltClass] = useState("dlt-modal-hidden")
+    const locationIcon = "fa-light fa-location-dot"
 
     const currGroup = async () => {
         await fetch(`/api/groups/${id}`)
@@ -66,19 +68,22 @@ export default function GroupDetail() {
             else prev.push(curr)
             return prev
         }, [])
+        console.log(group?.GroupImages[0]?.id)
 
     return (
-        <div>
-            <div><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
-            <div><img src={group?.GroupImages[0]?.url}></img></div>
-            <div>{group?.name}</div>
-            <div>{group?.city + ", "}
-            {group?.state}
-            </div>
-            <div>
-            Organized by:
-            {" " + group?.Organizer?.firstName + " "}
-            {group?.Organizer?.lastName}
+        <div className="content">
+            <div className="breadcrumb"><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
+            <div className="dtl-header">
+                <div className="dtl-img"><img src={group?.GroupImages[0]?.url}></img></div>
+                <div className="dtl-info">
+                    <div className="dtl-name"><h2>{group?.name}</h2></div>
+                    <div className="dtl-location"><FontAwesomeIcon icon="fa-light fa-location-dot" />{group?.city + ", "}
+                    {group?.state}
+                    </div>
+                    <div>
+                    Organized by:
+                    {" " + group?.Organizer?.firstName + " "}
+                    {group?.Organizer?.lastName}
             </div>
 
             {sessionUser && sessionUser.id !== group?.Organizer?.id &&
@@ -93,6 +98,8 @@ export default function GroupDetail() {
 
             {sessionUser && sessionUser.id === group?.Organizer?.id &&
             <button onClick={showDeleteModal}>Delete</button>}
+            </div>
+            </div>
 
             <div className={dltClass}>
                 <div className="dlt-modal-content">
