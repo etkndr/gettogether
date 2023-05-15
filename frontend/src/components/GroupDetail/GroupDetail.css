@@ -1,8 +1,50 @@
-.event, .event a {
+.event a {
     cursor: pointer;
     text-decoration: none;
     color: black;
 }
+
+.breadcrumb a {
+    color: #0f7c8d;
+    text-decoration: none;
+    font-size: 10.5pt;
+    font-weight: 600;
+}
+
+.breadcrumb {
+    font-size: 10.5pt;
+    margin-top: 20px;
+    font-weight: 600;
+} 
+
+.dtl-header {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "img info";
+}
+
+.dtl-img {
+grid-area: img;
+width: auto;
+}
+
+.dtl-info {
+    grid-area: info;
+    margin-left: 30px;
+    margin-top: -20px;
+}
+
+.dtl-img img {
+    width: 600px;
+}
+
+.dtl-name h2{
+    font-weight: 800;
+}
+
+/* ----modal---- */
 
 .dlt-modal {
     display: block;
