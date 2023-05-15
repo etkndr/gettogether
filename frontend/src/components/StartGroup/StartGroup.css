@@ -1,0 +1,40 @@
+.organizer {
+    color: #0f7c8d;
+    text-transform: uppercase;
+    font-size: 10pt;
+    margin-top: 10px;
+}
+
+.start-heading {
+    font-size: 20pt;
+    font-weight: 400;
+}
+
+.form-heading {
+    font-weight: 400;
+    font-size: 14pt;
+    margin-bottom: 0px;
+}
+
+.form-caption {
+    font-size: 10.5pt;
+    margin-top: 5px;
+    color: gray;
+}
+
+.form-section {
+    border-bottom: 1px solid gray;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+}
+
+.dtl-btn:disabled {
+    background-color: gray;
+    cursor: default;
+}
+
+.start-form input, select {
+    border: 2px solid black;
+    width: 300px;
+    font-size: 10.5pt;
+}

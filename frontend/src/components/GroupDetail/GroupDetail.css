@@ -18,6 +18,8 @@
 } 
 
 .dtl-header {
+    border-bottom: 1px solid gray;
+    padding-bottom: 30px;
     margin-top: 30px;
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -34,6 +36,7 @@ width: auto;
     grid-area: info;
     margin-left: 30px;
     margin-top: -20px;
+    font-size: 10pt;
 }
 
 .dtl-img img {
@@ -42,8 +45,28 @@ width: auto;
 
 .dtl-name h2{
     font-weight: 800;
+    margin-bottom: 40px;
 }
 
+.dtl-buttons {
+    margin-top: 20px;
+}
+
+.dtl-btn {
+    color: white;
+    background-color: #ff3b41;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dtl-caption {
+    margin-bottom: 10px;
+}
+
+.dtl-about {
+    margin-bottom: 30px;
+}
 /* ----modal---- */
 
 .dlt-modal {

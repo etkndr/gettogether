@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import * as groupActions from "../../store/groups"
 import { useHistory } from "react-router-dom"
+import "./StartGroup.css"
 
 export default function StartGroup() {
     const dispatch = useDispatch()
@@ -17,16 +18,19 @@ export default function StartGroup() {
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(true)
 
+    console.log(errors)
+
     useEffect(() => {
         if (
             name.length &&
             about.length &&
             city.length &&
             state.length &&
-            image.length &&
-            !errors.length
+            image.length
         ) {
             setDisabled(false)
+        } else {
+            setDisabled(true)
         }
     }, [name, about, city, state, image, errors])
 
@@ -59,17 +63,21 @@ export default function StartGroup() {
 
 
     return (
-        <div>
-            <h2>Start a new group</h2>
-            <form onSubmit={onSubmit}>
+        <div className="content">
+            <div className="organizer">
+                Become an organizer
+            </div>
+            <h2 className="start-heading">We'll walk you through a few steps to build your local community</h2>
+            <hr></hr>
+            <form onSubmit={onSubmit} className="start-form">
             <ul>
                         {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
                     </ul>
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Set your group's location
                 </h3>
-                <p>getTogether groups meet locally, in person, and online. We'll connect you with people in your area.</p>
+                <p className="form-caption">getTogether groups meet locally, in person, and online. We'll connect you with people in your area.</p>
                 <input 
                     type="text"
                     value={location} 
@@ -84,11 +92,11 @@ export default function StartGroup() {
                     placeholder="City, STATE"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     What will your group's name be?
                 </h3>
-                <p>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
+                <p className="form-caption">Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
                 <input 
                     type="text"
                     value={name} 
@@ -97,21 +105,21 @@ export default function StartGroup() {
                     name="name"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Describe the purpose of your group
                 </h3>
-                <p>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
+                <p className="form-caption">People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
                 <input 
                     type="text"
                     value={about} 
                     onChange={(e) => setAbout(e.target.value)}
-                    placeholder="Please write at least 50 characters">
+                    placeholder="Please write at least 30 characters">
                 </input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Is this an in-person group or online?
                 </h3>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -119,7 +127,7 @@ export default function StartGroup() {
                     <option value="Online">Online</option>
                 </select>
 
-                <h3>
+                <h3 className="form-heading">
                     Is this group private or public?
                 </h3>
                 <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
@@ -127,7 +135,7 @@ export default function StartGroup() {
                     <option value="">Public</option>
                 </select>
 
-                <h3>
+                <h3 className="form-heading">
                     Please add an image URL for your group below:
                 </h3>
                 <input 
@@ -138,7 +146,7 @@ export default function StartGroup() {
                 </input>
             </div>
 
-            <button type="submit" disabled={disabled}>Create group</button>
+            <button type="submit" disabled={disabled} className="dtl-btn">Create group</button>
             </form>
         </div>
     )

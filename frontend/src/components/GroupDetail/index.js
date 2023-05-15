@@ -68,7 +68,6 @@ export default function GroupDetail() {
             else prev.push(curr)
             return prev
         }, [])
-        console.log(group?.GroupImages[0]?.id)
 
     return (
         <div className="content">
@@ -77,27 +76,33 @@ export default function GroupDetail() {
                 <div className="dtl-img"><img src={group?.GroupImages[0]?.url}></img></div>
                 <div className="dtl-info">
                     <div className="dtl-name"><h2>{group?.name}</h2></div>
-                    <div className="dtl-location"><FontAwesomeIcon icon="fa-light fa-location-dot" />{group?.city + ", "}
-                    {group?.state}
+                    <div className="dtl-location">
+                        <FontAwesomeIcon icon="fa-light fa-location-dot" />{group?.city + ", "}
+                        {group?.state}
+                    </div>
+                    <div className="dtl-event-num">
+                        {sorted?.length} events · {group?.private && "Private group"} {!group?.private && "Public group"}
                     </div>
                     <div>
-                    Organized by:
-                    {" " + group?.Organizer?.firstName + " "}
-                    {group?.Organizer?.lastName}
-            </div>
+                        Organized by:
+                        {" " + group?.Organizer?.firstName + " "}
+                        {group?.Organizer?.lastName}
+                    </div>
 
-            {sessionUser && sessionUser.id !== group?.Organizer?.id &&
-            <button onClick={popup}>Join this group</button>
-            }
+                <div className="dtl-buttons">
+                    {sessionUser && sessionUser.id !== group?.Organizer?.id &&
+                    <button onClick={popup} className="dtl-btn">Join this group</button>
+                    }
 
-            {sessionUser && sessionUser.id === group?.Organizer?.id && 
-            <button onClick={createEvent}>Create event</button>}
+                    {sessionUser && sessionUser.id === group?.Organizer?.id && 
+                    <button onClick={createEvent} className="dtl-btn">Create event</button>}
 
-            {sessionUser && sessionUser.id === group?.Organizer?.id &&
-            <button onClick={updateGroup}>Update</button>}
+                    {sessionUser && sessionUser.id === group?.Organizer?.id &&
+                    <button onClick={updateGroup} className="dtl-btn">Update</button>}
 
-            {sessionUser && sessionUser.id === group?.Organizer?.id &&
-            <button onClick={showDeleteModal}>Delete</button>}
+                    {sessionUser && sessionUser.id === group?.Organizer?.id &&
+                    <button onClick={showDeleteModal} className="dtl-btn">Delete</button>}
+                </div>
             </div>
             </div>
 
@@ -111,40 +116,51 @@ export default function GroupDetail() {
                 </div>
             </div>
 
-            <h3>What we're about</h3>
-            {group?.about}
+            <h3 className="dtl-caption">Organizer</h3>
+                {group?.Organizer?.firstName} {group?.Organizer?.lastName}
 
-            <h3>Events {`(${sorted.length})`}</h3>
-            {sorted?.map((event) => {
+            <h3 className="dtl-caption">What we're about</h3>
+            <div className="dtl-about">
+                {group?.about}
+            </div>
+
+            <h3 className="dtl-caption">Upcoming events {`(${sorted.length})`}</h3>
+            {sorted?.map((event, idx) => {
                 return (
-                    <div className="event">
-                        <NavLink to={`/event/${event?.id}`}>
-                        <img src={event?.previewImage} alt="preview"></img>
-                    <li key={event?.id}>
-                        <p>{convertTime(event?.startDate)}</p>
-                        <p>{event?.name}</p>
-                        <p>{event?.Group.city}, {event?.Group.state}</p>
-                        <p>{event?.description}</p>
-                    </li>
-                    </NavLink>
+                    <NavLink to={`/event/${event?.id}`} className="group-detail-link">
+                    <div key={idx} className="event">
+                        <div key={`${idx}-img`} className="grp-img">
+                            <img src={event?.previewImage} alt="preview"></img>
+                        </div>
+                        <div key={event?.id} className="grp-info">
+                            <li key={`${idx}-date`} className="grp-location">{convertTime(event?.startDate)}</li>
+                            <li key={`${idx}-name`} className="grp-name">{event?.name}</li>
+                            <li key={`${idx}-location`} className="grp-about">{event?.Group?.city}, {event?.Group?.state}</li>
+                            <div key={`${idx}-about`} className="grp-about">{event?.description}</div>
+                        </div>
                     </div>
+                    <hr></hr>
+                    </NavLink>
                 )
             })}
             {past.length > 0 && <h3>Past events {`(${past.length})`}</h3>}
-            {past?.map((event) => {
-                    return (
-                        <div className="event">
-                         <NavLink to={`/event/${event?.id}`}>
+            {past?.map((event, idx) => {
+                return (
+                    <NavLink to={`/event/${event?.id}`} className="group-detail-link">
+                    <div key={idx} className="event">
+                        <div key={`${idx}-img`} className="grp-img">
                             <img src={event?.previewImage} alt="preview"></img>
-                            <p>{event?.description}</p>
-                        <li key={event?.id}>
-                            <p>{convertTime(event?.startDate)}</p>
-                            <p>{event?.name}</p>
-                            <p>{event?.Group.city}, {event?.Group.state}</p>
-                        </li>
-                        </NavLink>
                         </div>
-                ) 
+                        <div key={event?.id} className="grp-info">
+                            <li key={`${idx}-date`} className="grp-location">{convertTime(event?.startDate)}</li>
+                            <li key={`${idx}-name`} className="grp-name">{event?.name}</li>
+                            <li key={`${idx}-location`} className="grp-about">{event?.Group?.city}, {event?.Group?.state}</li>
+                            <div key={`${idx}-about`} className="grp-about">{event?.description}</div>
+                        </div>
+                    </div>
+                    <hr></hr>
+                    </NavLink>
+                )
             })}
         </div>
     )

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import * as groupActions from "../../store/groups"
 import * as eventActions from "../../store/events"
 import { convertTime } from "../../App"
+import "./EventDetail.css"
 
 export default function EventDetail () {
     const dispatch = useDispatch()
@@ -37,9 +38,9 @@ export default function EventDetail () {
     let hostButtons
     if (sessionUser && sessionUser.id === group?.Organizer?.id) {
         hostButtons = (
-            <div>
-            <button onClick={popup}>Update</button>
-            <button onClick={showDeleteModal}>Delete</button>
+            <div className="event-btns">
+            <button className="dtl-btn" onClick={popup}>Update</button>
+            <button className="dtl-btn" onClick={showDeleteModal}>Delete</button>
             </div>
         )
     }
@@ -61,8 +62,7 @@ export default function EventDetail () {
 
     if (loaded && event && group) {
     return (
-        <div>
-
+        <div className="content">
             <div className={dltClass}>
                 <div className="dlt-modal-content">
                 <button className='close-modal' onClick={hideModal}>X</button>
@@ -73,55 +73,65 @@ export default function EventDetail () {
                 </div>
             </div>
 
-            <div>
+            <div className="breadcrumb">
                 <NavLink to="/events">Events</NavLink> {`>`} {event?.name}
             </div>
-            <div>
-                <p>
-                    {event?.name}
-                </p>
-                <p>
+                    <div className="dtl-name"><h2>{event?.name}</h2></div>
                 Hosted by:
             {" " + group?.Organizer?.firstName + " "}
             {group?.Organizer?.lastName}
-                </p>
-                <div>
-                    {event?.EventImages[0]?.url}
+            <div className="dtl-header">
+                <div className="dtl-img">
+                    <img src={event?.EventImages[0]?.url} alt="event-image"></img>
                 </div>
-                <div>
-                    <h2>Event info</h2>
-                    <div>
+                <div className="dtl-info">
+                    {/* ------ group info grid ------ */}
+                    <div className="grp-grid">
+                        <NavLink to={`/group/${group?.id}`}>
+                        <div className="grp-grid-img">
+                            <img src={group?.GroupImages[0]?.url}></img>
+                        </div>
+                        <div className="grp-grid-info">
+                            <div className="grp-grid-name">{group?.name}</div>
+                            <div className="grp-private">{group?.private && "Private group"}
+                            {!group?.private && "Public group"}</div>
+                        </div> 
+                        </NavLink>
+                    </div>                    
+
+                    {/* ---icon grid --------- */}
+                    <div className="icon-grid">
+                    <div className="clock">
                         <i class="fa-regular fa-clock"></i>
-                        <div>
-                        <p>START {convertTime(event?.startDate)}</p>
-                        <p>END {convertTime(event?.endDate)}</p>
-                        </div>
                     </div>
-                    <div>
+                        <div className="clock-text">
+                        <p><span className="start-end">START</span> {convertTime(event?.startDate)}</p>
+                        <p><span className="start-end">END</span> {convertTime(event?.endDate)}</p>
+                        </div>
+                    <div className="dollar">
                         <i class="fa-regular fa-dollar-sign"></i>
-                        <div>
-                            {event?.price || "FREE"}
                         </div>
+                        <div className="dollar-text">
+                            {event?.price || "FREE"}
                     </div>
-                    <div>
+                    <div className="marker">
                         <i class="fa-regular fa-location-dot"></i>
-                        <div>
+                        </div>
+                        <div className="marker-text">
                             {event?.type}
                         </div>
                     </div>
-                    <div>
+                </div>
+            </div>
                         <h3>
                             Description
                         </h3>
                         <div>
                             {event?.description}
                         </div>
-                    </div>
-                </div>
                 <div>
                     Group info: {group?.about}
                 </div>
-            </div>
                 {hostButtons}
         </div>
     )
