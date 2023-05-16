@@ -1,14 +1,69 @@
+hr, a hr {
+    border: 1px solid gray;
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 900px;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
 .group {
     cursor: pointer;
     list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto;
+    grid-template-areas: "img info";
+}
+
+.grp-img {
+    grid-area: img;
+}
+
+.grp-img img {
+    width: 175px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.grp-info {
+    grid-area: info;
+}
+
+.caption h2{
+    margin: 50px 20px 30px 0;
+    font-size: 22pt;
+    letter-spacing: 0px;
+}
+
+.grp-name {
+    font-weight: 600;
+    font-size: 14pt;
+}
+
+.grp-location {
+    color: #877457;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    font-weight: 800;
+}
+
+.grp-about {
+    color: gray;
+    width: 80%;
+    font-size: 11pt;
+    line-height: 20px;
+    margin: 10px 0 10px 0;
 }
 
 .select {
-    margin: 10px 10px 10px 10px;
+    margin: 10px 10px 20px -10px;
 }
 
 .select a {
-    font-size: 14pt;
+    font-size: 15pt;
     font-weight: 600;
     padding: 10px;
     color: gray;

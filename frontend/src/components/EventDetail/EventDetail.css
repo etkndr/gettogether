@@ -1,1 +1,111 @@
-export default function EventDetail ()
+.grp-grid a {
+    color: black;
+    text-decoration: none;
+    height: 100px;
+    margin-top: 20px;
+    border-bottom: 1px solid gray;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: auto;
+    grid-template-areas: "img info";
+}
+
+.grp-grid-img {
+    grid-area: img;
+}
+
+.grp-grid-img img {
+    width: 150px;
+}
+
+.grp-grid-info {
+    grid-area: info;
+    margin-left: 10px;
+}
+
+.grp-grid-name {
+    color: #0f7c8d;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    font-weight: 800;
+}
+
+.grp-private {
+    color: gray;
+    font-size: 10pt;
+}
+
+.event-btns {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+/* ---- icon grid -----*/
+
+.icon-grid {
+    height: 150px;
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 9fr;
+    grid-template-rows: auto;
+    grid-template-areas: 
+    "clock clock-text"
+    "dollar dollar-text"
+    "marker marker-text";
+}
+
+.clock {
+    grid-area: clock;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.dollar {
+    grid-area: dollar;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.marker {
+    grid-area: marker;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.clock-text {
+    grid-area: clock-text;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.clock-text p {
+    margin: 0;
+}
+
+.dollar-text {
+    grid-area: dollar-text;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.marker-text {
+    grid-area: marker-text;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.start-end {
+    color: #0f7c8d;
+    text-transform: uppercase;
+    font-size: 10.5pt;
+    font-weight: 800;
+    width: 50px;
+    display: inline-block;
+}
+

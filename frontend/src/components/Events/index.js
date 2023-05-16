@@ -35,28 +35,31 @@ export default function Events() {
         }, [])
 
     return (
-        <>
+        <div className="content">
+        <div className="caption">
+            <h2>Events in getTogether</h2>
+        </div>
         <div className="select">
             <NavLink to="/events">Events</NavLink>
             <NavLink to="/groups">Groups</NavLink>
         </div>
-        <div className="caption">
-            <h3>Events in getTogether</h3>
-        </div>
-        {sorted?.map((event) => {
+        <hr></hr>
+        {sorted?.map((event, idx) => {
                 return (
-                    <div className="event">
-                        <NavLink to={`/event/${event.id}`}>
-                        <img src={event.previewImage} alt="preview"></img>
-                    <li key={event?.id}>
-                        <p>{convertTime(event.startDate)}</p>
-                        <p>{event?.name}</p>
-                        <p>{event.Group.city}, {event.Group.state}</p>
-                        <p>{event.description}</p>
-                    </li>
-                    </NavLink>
-                    <hr></hr>
+                    <NavLink to={`/event/${event?.id}`} className="group-detail-link">
+                    <div key={idx} className="event">
+                        <div key={`${idx}-img`} className="grp-img">
+                            <img src={event?.previewImage} alt="preview"></img>
+                        </div>
+                        <div key={event?.id} className="grp-info">
+                            <li key={`${idx}-date`} className="grp-location">{convertTime(event?.startDate)}</li>
+                            <li key={`${idx}-name`} className="grp-name">{event?.name}</li>
+                            <li key={`${idx}-location`} className="grp-about">{event?.Group?.city}, {event?.Group?.state}</li>
+                            <div key={`${idx}-about`} className="grp-about">{event?.description}</div>
+                        </div>
                     </div>
+                    <hr></hr>
+                    </NavLink>
                 )
             })}
 
@@ -64,20 +67,20 @@ export default function Events() {
             {past?.map((event) => {
                     return (
                         <div className="event">
-                         <NavLink to={`/event/${event.id}`}>
-                            <img src={event.previewImage} alt="preview"></img>
-                            <p>{event.description}</p>
+                         <NavLink to={`/event/${event?.id}`}>
+                            <img src={event?.previewImage} alt="preview"></img>
+                            <p>{event?.description}</p>
                         <li key={event?.id}>
-                            <p>{convertTime(event.startDate)}</p>
+                            <p>{convertTime(event?.startDate)}</p>
                             <p>{event?.name}</p>
-                            <p>{event.Group.city}, {event.Group.state}</p>
+                            <p>{event?.Group?.city}, {event?.Group?.state}</p>
                         </li>
                         </NavLink>
                         <hr></hr>
                         </div>
                 ) 
             })}
-        </>
+        </div>
     )
 }
 }

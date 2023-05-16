@@ -48,16 +48,16 @@
     return (
       <>
         <button onClick={openMenu} className="profile">
-          <div className="profile-circle">{firstInitial}</div> <i class={dropArrow}></i>
+          <div className="profile-circle">{firstInitial}</div> <i className={dropArrow}></i>
         </button>
         <ul className={ulClassName} ref={ulRef}>
           <li className="profile-link">Hello, {user.firstName}!</li>
           <li className="profile-link">{user.email}</li>
           <hr></hr>
-          <li>
+          <div>
             <li className="profile-link"><NavLink to="/groups" className="profile-link">View groups</NavLink></li>
             <li className="profile-link"><NavLink to="/events" className="profile-link">View events</NavLink></li>
-          </li>
+          </div>
           <li>
             <button onClick={logout} className="logout">Log Out</button>
           </li>

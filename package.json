@@ -1,11 +1,7 @@
 {
-  "dependencies": {
-    "bcryptjs": "^2.4.3"
-  },
   "name": "meetup_proj",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/etkndr/meetup_proj.git"
