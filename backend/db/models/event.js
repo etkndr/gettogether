@@ -28,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     venueId: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {model: "Venues"},
-      onDelete: "CASCADE"
+      // references: {model: "Venues"},
+      // onDelete: "CASCADE"
     },
     name: {
       type: DataTypes.STRING,
