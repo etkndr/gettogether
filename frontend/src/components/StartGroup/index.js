@@ -122,7 +122,7 @@ export default function StartGroup() {
                 <h3 className="form-heading">
                     Is this an in-person group or online?
                 </h3>
-                <select value={type} onChange={(e) => setType(e.target.value)}>
+                <select placeholder="Select one" value={type} onChange={(e) => setType(e.target.value)}>
                     <option value="In person">In-person</option>
                     <option value="Online">Online</option>
                 </select>

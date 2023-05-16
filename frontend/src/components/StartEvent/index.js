@@ -87,14 +87,14 @@ export default function StartEvent() {
 
 
     return (
-        <div>
-            <h2>Create a new event for {group?.name}</h2>
-            <form onSubmit={onSubmit}>
+        <div className="content">
+            <h2 className="start-heading">Create a new event for {group?.name}</h2>
+            <form onSubmit={onSubmit} className="start-form">
             <ul>
                         {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
                     </ul>
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     What is the name of your event?
                 </h3>
                 <input 
@@ -104,8 +104,8 @@ export default function StartEvent() {
                     placeholder="Event name"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Is this an in-person or online event?  
                 </h3>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -114,8 +114,8 @@ export default function StartEvent() {
                 </select>
             </div>
 
-            <div>
-            <h3>
+            <div className="form-section">
+            <h3 className="form-heading">
                     Is this event private or public?
                 </h3>
                 <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
@@ -124,8 +124,8 @@ export default function StartEvent() {
                 </select>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     What is the price of your event?
                 </h3>
                 <input
@@ -135,8 +135,8 @@ export default function StartEvent() {
                     onChange={(e) => setPrice(e.target.value)}></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     When does your event start?
                 </h3>
                 <input 
@@ -146,8 +146,8 @@ export default function StartEvent() {
                     placeholder="MM-DD-YYYY, HH:mm AM"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     When does your event end?
                 </h3>
                 <input 
@@ -157,8 +157,8 @@ export default function StartEvent() {
                     placeholder="MM-DD-YYYY, HH:mm PM"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Please add an image url for your event below:
                 </h3>
                 <input 
@@ -168,8 +168,8 @@ export default function StartEvent() {
                     placeholder="Image url"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Please describe your event
                 </h3>
                 <input 
@@ -178,7 +178,7 @@ export default function StartEvent() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Please include at least 30 characters"></input>
             </div>
-            <button type="submit" disabled={disabled}>Create event</button>
+            <button type="submit" disabled={disabled} className="dtl-btn">Create event</button>
             </form>
         </div>
     )
