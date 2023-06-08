@@ -18,14 +18,14 @@ module.exports = (sequelize, DataTypes) => {
     eventId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // references: {model: "Events"},
-      // onDelete: "CASCADE"
+      references: {model: "Events"},
+      onDelete: "CASCADE"
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // references: {model: "Users"},
-      // onDelete: "CASCADE"
+      references: {model: "Users"},
+      onDelete: "CASCADE"
     },
     status: {
       type: DataTypes.STRING,
