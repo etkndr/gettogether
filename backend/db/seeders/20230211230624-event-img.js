@@ -14,7 +14,12 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         eventId: 1,
-        url: "www.example.com/img.png",
+        url: "https://i.imgur.com/grfMQkx.jpg",
+        preview: true
+      },
+      {
+        eventId: 2,
+        url: "https://i.imgur.com/2xRDfHF.jpg",
         preview: true
       },
     /**

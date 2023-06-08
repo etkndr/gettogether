@@ -15,13 +15,24 @@ module.exports = {
       {
         groupId: 1,
         venueId: 1,
-        name: "Demo event",
+        name: "Modular in the park",
         type: "In person",
         capacity: 100,
-        startDate: "2021-11-19 20:00:00",
-        endDate: "2021-11-20 20:00:00",
-        description: "Demo event for testing",
-        price: 18.50
+        startDate: "2024-11-19 20:00:00",
+        endDate: "2024-11-19 22:00:00",
+        description: "fusce id velit ut tortor pretium viverra suspendisse potenti nullam",
+        price: 0.00
+      },
+      {
+        groupId: 2,
+        venueId: 1,
+        name: "Coffee tasting",
+        type: "In person",
+        capacity: 100,
+        startDate: "2024-11-19 20:00:00",
+        endDate: "2024-11-19 22:00:00",
+        description: "ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat",
+        price: 10.00
       },
     /**
      * Add seed commands here.

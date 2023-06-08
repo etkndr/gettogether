@@ -8,10 +8,15 @@
     grid-template-columns: 1fr 2fr;
     grid-template-rows: auto;
     grid-template-areas: "img info";
+    padding-bottom: 20px;
+    min-height: 100%;
 }
 
 .grp-grid-img {
     grid-area: img;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
 }
 
 .grp-grid-img img {

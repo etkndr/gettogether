@@ -13,9 +13,14 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
       {
         groupId: 1,
-        url: "www.example.com/img.png",
+        url: "https://i.imgur.com/wV727LR.jpg",
         preview: true
       },
+      {
+        groupId: 2,
+        url: "https://i.imgur.com/hces8eJ.jpg",
+        preview: true
+      }
     /**
      * Add seed commands here.
      *
