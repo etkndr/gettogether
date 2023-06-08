@@ -19,32 +19,23 @@ module.exports = {
     options.tableName = 'Groups';
     return queryInterface.bulkInsert(options, [
       {
-        organizerId: 1,
-        name: 'Group 1',
-        about: "test group",
+        organizerId: john[0].id,
+        name: 'Synth enthusiasts',
+        about: "eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus",
         type: "In person",
-        private: true,
+        private: false,
         city: "New York",
         state: "NY"
      },
      {
       organizerId: john[0].id,
-      name: 'Group 2',
-      about: "test group John Doe",
-      type: "In person",
-      private: true,
-      city: "New York",
-      state: "NY"
-   },
-   {
-    organizerId: john[0].id,
-    name: 'Group 3',
-    about: "test group John Doe 2",
-    type: "In person",
-    private: true,
-    city: "New York",
-    state: "NY"
- },
+      name: 'Coffee addicts :)',
+      about: "faucibus et molestie ac feugiat sed lectus vestibulum mattis ullamcorper",
+      type: "Online",
+      private: false,
+      city: "Los Angeles",
+      state: "CA"
+   }
   ], {});
   },
 
