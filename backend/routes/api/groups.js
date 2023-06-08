@@ -113,7 +113,7 @@ router.post("/", async (req,res,next) => {
     }
 
 
-    if (!name || !about || !type || !city || !state) {
+    if (!name || !about || !type || !private || !city || !state) {
         const err = new Error("Requires name, about, type, privacy, city, state")
         err.status = 400
         return next(err)
@@ -196,7 +196,7 @@ router.put("/:id", async (req,res,next) => {
         return next(err)
     }
 
-    if (!name || !about || !type || !city || !state) {
+    if (!name || !about || !type || !private || !city || !state) {
         const err = new Error("Requires name, about, type, privacy, city, state")
         err.status = 400
         return next(err)
@@ -401,7 +401,7 @@ router.post("/:id/events", async (req,res,next) => {
         return next(err)
     }
 
-    if (!name || !type || !capacity || !startDate || !endDate || !description || price < 0) {
+    if (!name || !type || !capacity || !startDate || !endDate || !description || !price) {
         const err = new Error("Requires name, type, capacity, start, end, description, and price")
         err.status = 400
         return next(err)
