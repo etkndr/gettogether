@@ -5,6 +5,7 @@ import * as groupActions from "../../store/groups"
 import * as eventActions from "../../store/events"
 import { convertTime } from "../../App"
 import "./EventDetail.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 export default function EventDetail () {
     const dispatch = useDispatch()

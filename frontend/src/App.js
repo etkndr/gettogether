@@ -11,6 +11,10 @@ import EventDetail from "./components/EventDetail";
 import StartGroup from "./components/StartGroup";
 import EditGroup from "./components/EditGroup";
 import StartEvent from "./components/StartEvent";
+import {fas} from "@fortawesome/free-solid-svg-icons"
+import { library } from '@fortawesome/fontawesome-svg-core';
+
+library.add(fas)
 
 export function convertTime(dateTime) {
   let date = new Date(dateTime)

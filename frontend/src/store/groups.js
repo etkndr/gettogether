@@ -135,6 +135,9 @@ export const editGroup = (group, id) => async dispatch => {
 }
 
 export const addImg = (id, img) => async dispatch => {
+    const dlt = await csrfFetch(`/api/group-images/${id}`, {
+        method: "DELETE"
+    })
     const res = await csrfFetch(`/api/groups/${id}/images`, {
         method: "POST",
         body: JSON.stringify({
@@ -181,7 +184,8 @@ switch(action.type) {
         newState.currGroup = action.group
         return newState
     case ADD_IMG:
-        newState.currGroup.GroupImages = action.image
+        delete newState.allGroups[action.id].previewImage
+        newState.allGroups[action.id].previewImage = action.image
         return newState
     case DLT_IMG:
         delete newState.currGroup.GroupImages[action.image.id]

@@ -77,7 +77,7 @@ export default function GroupDetail() {
                 <div className="dtl-info">
                     <div className="dtl-name"><h2>{group?.name}</h2></div>
                     <div className="dtl-location">
-                        <FontAwesomeIcon icon="fa-light fa-location-dot" />{group?.city + ", "}
+                        <FontAwesomeIcon icon="fa-solid fa-location-dot" className="icon"/>{group?.city + ", "}
                         {group?.state}
                     </div>
                     <div className="dtl-event-num">
@@ -130,7 +130,7 @@ export default function GroupDetail() {
                     <NavLink to={`/event/${event?.id}`} className="group-detail-link">
                     <div key={idx} className="event">
                         <div key={`${idx}-img`} className="grp-img">
-                            <img src={event?.previewImage} alt="preview"></img>
+                            <img src={event?.previewImage} alt="preview" key={`${idx}-pic`}></img>
                         </div>
                         <div key={event?.id} className="grp-info">
                             <li key={`${idx}-date`} className="grp-location">{convertTime(event?.startDate)}</li>
