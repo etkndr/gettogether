@@ -10,15 +10,13 @@ export default function StartGroup() {
     const [location, setLocation] = useState("")
     const [name, setName] = useState("")
     const [about, setAbout] = useState("")
-    const [type, setType] = useState("In person")
+    const [type, setType] = useState()
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
-    const [privacy, setPrivacy] = useState(true)
+    const [privacy, setPrivacy] = useState()
     const [image, setImage] = useState("")
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(true)
-
-    console.log(errors)
 
     useEffect(() => {
         if (
@@ -26,13 +24,16 @@ export default function StartGroup() {
             about.length &&
             city.length &&
             state.length &&
-            image.length
+            image.length &&
+            type.length &&
+            !!privacy
+            
         ) {
             setDisabled(false)
         } else {
             setDisabled(true)
         }
-    }, [name, about, city, state, image, errors])
+    }, [name, about, city, state, image, errors, privacy, type])
 
     const newGroup = (group) => {
         dispatch(groupActions.createNewGroup(group)).then((res) => {
@@ -123,6 +124,7 @@ export default function StartGroup() {
                     Is this an in-person group or online?
                 </h3>
                 <select placeholder="Select one" value={type} onChange={(e) => setType(e.target.value)}>
+                    <option value="" selected disabled>(select one)</option>
                     <option value="In person">In-person</option>
                     <option value="Online">Online</option>
                 </select>
@@ -131,8 +133,9 @@ export default function StartGroup() {
                     Is this group private or public?
                 </h3>
                 <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
+                    <option value="" selected disabled>(select one)</option>
                     <option value={true}>Private</option>
-                    <option value="">Public</option>
+                    <option value={false}>Public</option>
                 </select>
 
                 <h3 className="form-heading">

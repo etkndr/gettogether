@@ -91,7 +91,7 @@ export default function LandingPage() {
                 <div className="start-img">
                     <img src={startImg}/>
                 </div>
-                <Link to="/new-group" className={startGroupClass}>Start a group</Link>
+                <Link to="/group/new" className={startGroupClass}>Start a group</Link>
                 <p>
                     You don't have to be an expert to gather people together and explore shared interests.
                 </p>
