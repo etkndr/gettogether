@@ -29,6 +29,13 @@ export default function Groups() {
         })
     })
 
+    let eventPlural
+    if (numEvents > 1) {
+        eventPlural = "events"
+    } else {
+        eventPlural = "event"
+    }
+
     return (
         <div className="content">
         <div className="caption">
@@ -49,7 +56,7 @@ export default function Groups() {
                         <li key={`${idx}-city`} className="grp-location">{group?.city}, {group?.state}</li>
                         <li key={`${idx}-about`} className="grp-about">{group?.about}</li>
                         <li key={`${idx}-events`} className="grp-about">
-                        {numEvents[group?.id] || 0} events ·
+                        {numEvents[group?.id] || 0} {eventPlural} ·
                         {group?.private && " Private"}
                         {!group?.private && " Public"}
                         </li>

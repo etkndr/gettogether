@@ -196,7 +196,7 @@ router.put("/:id", async (req,res,next) => {
         return next(err)
     }
 
-    if (!name || !about || !type || !private || !city || !state) {
+    if (!name || !about || !type || !city || !state) {
         const err = new Error("Requires name, about, type, privacy, city, state")
         err.status = 400
         return next(err)

@@ -12,10 +12,10 @@ export default function StartEvent() {
     const [price, setPrice] = useState()
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [type, setType] = useState("In person")
+    const [type, setType] = useState()
     const [start, setStart] = useState("")
     const [end, setEnd] = useState("")
-    const [privacy, setPrivacy] = useState(true)
+    const [privacy, setPrivacy] = useState()
     const [image, setImage] = useState("")
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(true)
@@ -24,6 +24,7 @@ export default function StartEvent() {
         dispatch(groupActions.getOneGroup(id))
     }, [dispatch])
 
+    
     useEffect(() => {
         if (
             name.length &&
@@ -33,38 +34,32 @@ export default function StartEvent() {
             start.length &&
             end.length &&
             image.length &&
+            !!privacy &&
+            type.length &&
             !errors.length
-        ) {
-            setDisabled(false)
-        }
-    }, [name, description, price, start, end, image, errors])
-
-    const newEvent = (event) => {
-        dispatch(eventActions.createEvent(id, event)).then((res) => {
-            dispatch(eventActions.addImg(res.id, image))
-            .then(() => 
-            history.push(`/event/${res.id}`)
-            )
-        }).catch(async (res) => {
-            const data = await res.json()
-            if (data && data.errors) setErrors(data.errors)
-        })
-    }
-
-    const convertTime = (input) => {
-        const split = input.split(", ")
-        const formatDate = split[0].slice(6).concat("-", split[0].slice(0, 5))
-        const amPm = split[1].slice(6).toUpperCase()
-        let formatTime
-        if (amPm === "PM") {
-            formatTime = (Number(split[1].slice(0,2)) + 12)
-            .toString().concat(split[1].slice(2,5), ":00")
-        } else {
-            formatTime = split[1].slice(0,5).concat(":00")
+            ) {
+                setDisabled(false)
+            } else {
+                setDisabled(true)
+            }
+        }, [name, description, price, start, end, image, errors])
+        
+        const newEvent = (event) => {
+            dispatch(eventActions.createEvent(id, event)).then((res) => {
+                dispatch(eventActions.addImg(res.id, image))
+                .then(() => 
+                history.push(`/event/${res.id}`)
+                )
+            }).catch(async (res) => {
+                const data = await res.json()
+                if (data && data.errors) setErrors(data.errors)
+            })
         }
         
-        const date = formatDate.concat(" ", formatTime)
-        return date
+        const convertTime = (input) => {
+            const split = input.split("T")
+            const joined = `${split[0]} ${split[1]}:00`
+            return joined
     }
     
     const onSubmit = async (e) => {
@@ -109,6 +104,7 @@ export default function StartEvent() {
                     Is this an in-person or online event?  
                 </h3>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
+                    <option value="" selected disabled>(select one)</option>
                     <option value="In person">In-person</option>
                     <option value="Online">Online</option>
                 </select>
@@ -119,6 +115,7 @@ export default function StartEvent() {
                     Is this event private or public?
                 </h3>
                 <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
+                    <option value="" selected disabled>(select one)</option>
                     <option value={true}>Private</option>
                     <option value="">Public</option>
                 </select>
@@ -140,7 +137,7 @@ export default function StartEvent() {
                     When does your event start?
                 </h3>
                 <input 
-                    type="text"
+                    type="datetime-local"
                     value={start} 
                     onChange={(e) => setStart(e.target.value)}
                     placeholder="MM-DD-YYYY, HH:mm AM"></input>
@@ -151,7 +148,7 @@ export default function StartEvent() {
                     When does your event end?
                 </h3>
                 <input 
-                    type="text"
+                    type="datetime-local"
                     value={end} 
                     onChange={(e) => setEnd(e.target.value)}
                     placeholder="MM-DD-YYYY, HH:mm PM"></input>

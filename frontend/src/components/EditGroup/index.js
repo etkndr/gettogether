@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import * as groupActions from "../../store/groups"
 import * as sessionActions from "../../store/session"
 import { useHistory, useParams } from "react-router-dom"
+import "./EditGroup.css"
 
 export default function EditGroup() {
     const dispatch = useDispatch()
@@ -12,14 +13,14 @@ export default function EditGroup() {
     const sessionUser = useSelector(state => state.session.user)
 
     const [loaded, setLoaded] = useState(false)
-    const [location, setLocation] = useState()
-    const [name, setName] = useState()
-    const [about, setAbout] = useState()
-    const [type, setType] = useState()
-    const [city, setCity] = useState()
-    const [state, setState] = useState()
-    const [privacy, setPrivacy] = useState()
-    const [image, setImage] = useState()
+    const [location, setLocation] = useState(`${group?.city}, ${group?.state}`)
+    const [name, setName] = useState(group?.name)
+    const [about, setAbout] = useState(group?.about)
+    const [type, setType] = useState(group?.type)
+    const [city, setCity] = useState(group?.city)
+    const [state, setState] = useState(group?.state)
+    const [privacy, setPrivacy] = useState(group?.private)
+    const [image, setImage] = useState("image URL")
     const [errors, setErrors] = useState([])
     const [disabled, setDisabled] = useState(false)
 
@@ -39,7 +40,6 @@ export default function EditGroup() {
             setPrivacy(group?.private)
             setImage(group?.GroupImages[0]?.url)
         }
-        console.log(group?.GroupImages[0]?.id)
     }, [loaded, id])
 
     
@@ -60,8 +60,7 @@ export default function EditGroup() {
     const updateGroup = (group) => {
         dispatch(groupActions.editGroup(group, id))
         .then((res) => {
-            // dispatch(groupActions.deleteImage(id, group?.GroupImages[0]?.id))
-            // .then(() => dispatch(groupActions.addImg(id, image)))
+            dispatch(groupActions.addImg(id, image))
             history.push(`/group/${res.id}`)
         })
         .catch(async (res) => {
@@ -94,17 +93,17 @@ export default function EditGroup() {
     if (loaded) {
     
     return (
-        <div>
+        <div className="content">
             <h2>Update your group</h2>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit} className="start-form">
             <ul>
                         {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
                     </ul>
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Set your group's location
                 </h3>
-                <p>getTogether groups meet locally, in person, and online. We'll connect you with people in your area.</p>
+                <p className="form-caption">getTogether groups meet locally, in person, and online. We'll connect you with people in your area.</p>
                 <input 
                     type="text"
                     value={location} 
@@ -119,11 +118,11 @@ export default function EditGroup() {
                     placeholder="City, STATE"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     What will your group's name be?
                 </h3>
-                <p>Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
+                <p className="form-caption">Choose a name that will give people a clear idea of what the group is about. Feel free to get creative! You can edit this later if you change your mind.</p>
                 <input 
                     type="text"
                     value={name} 
@@ -132,11 +131,11 @@ export default function EditGroup() {
                     name="name"></input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Describe the purpose of your group
                 </h3>
-                <p>People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
+                <p className="form-caption">People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
                 <input 
                     type="text"
                     value={about} 
@@ -145,8 +144,8 @@ export default function EditGroup() {
                 </input>
             </div>
 
-            <div>
-                <h3>
+            <div className="form-section">
+                <h3 className="form-heading">
                     Is this an in-person group or online?
                 </h3>
                 <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -154,15 +153,15 @@ export default function EditGroup() {
                     <option value="Online">Online</option>
                 </select>
 
-                <h3>
+                <h3 className="form-heading">
                     Is this group private or public?
                 </h3>
                 <select value={privacy} onChange={(e) => setPrivacy(e.target.value)}>
                     <option value={true}>Private</option>
-                    <option value="">Public</option>
+                    <option value={false}>Public</option>
                 </select>
 
-                <h3>
+                <h3 className="form-heading">
                     Please add an image URL for your group below:
                 </h3>
                 <input 
@@ -173,7 +172,7 @@ export default function EditGroup() {
                 </input>
             </div>
 
-            <button type="submit" disabled={disabled}>Update group</button>
+            <button type="submit" disabled={disabled} className="dtl-btn">Update group</button>
             </form>
         </div>
     )
