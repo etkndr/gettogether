@@ -45,6 +45,14 @@ export default function EventDetail () {
             </div>
         )
     }
+
+    let freeText
+
+    if (event?.price > 0) {
+        freeText = event?.price
+    } else {
+        freeText = "FREE"
+    }
     
     useEffect(() => {
         const currGroup = async (groupId) => {
@@ -113,7 +121,7 @@ export default function EventDetail () {
                         <i class="fa-regular fa-dollar-sign"></i>
                         </div>
                         <div className="dollar-text">
-                            {event?.price || "FREE"}
+                            {freeText}
                     </div>
                     <div className="marker">
                         <i class="fa-regular fa-location-dot"></i>
