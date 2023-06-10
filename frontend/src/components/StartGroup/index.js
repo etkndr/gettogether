@@ -15,25 +15,70 @@ export default function StartGroup() {
     const [state, setState] = useState("")
     const [privacy, setPrivacy] = useState()
     const [image, setImage] = useState("")
-    const [errors, setErrors] = useState([])
-    const [disabled, setDisabled] = useState(true)
+    const [errors, setErrors] = useState({})
+    const [disabled, setDisabled] = useState(false)
 
+    //SET ERRORS
     useEffect(() => {
-        if (
-            name.length &&
-            about.length &&
-            city.length &&
-            state.length &&
-            image.length &&
-            type.length &&
-            !!privacy
-            
-        ) {
-            setDisabled(false)
+        
+        if (about?.length && about?.length < 30) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                about: `${30 - about.length} more characters required`
+            }))
         } else {
-            setDisabled(true)
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                about: ""
+            }))
         }
-    }, [name, about, city, state, image, errors, privacy, type])
+
+        if (location?.length && state?.length !== 2) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                location: `Please enter a city and state (two characters) separated by comma`
+            }))
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                location: ""
+            }))
+        }
+
+        if (image?.length && ["png", "jpg", "jpeg"].indexOf(image?.split(".")[image?.split(".").length - 1]) < 0) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                image: "Image URL must end in '.png', '.jpg', or '.jpeg'"
+            }))
+        } else {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                image: ""
+            }))
+        }
+
+        if (name?.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                name: ""
+            }))
+        }
+
+        if (type?.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                type: ""
+            }))
+        }
+
+        if (privacy?.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                privacy: ""
+            }))
+        }
+    }, [name, location, city, about, state, image, privacy, type])
+
 
     const newGroup = (group) => {
         dispatch(groupActions.createNewGroup(group)).then((res) => {
@@ -47,7 +92,6 @@ export default function StartGroup() {
     
     const onSubmit = async (e) => {
         e.preventDefault()
-        let err = []
 
         const group = {
             name,
@@ -55,11 +99,62 @@ export default function StartGroup() {
             type,
             privacy: !!privacy,
             city,
-            state: state.toUpperCase(),
+            state: state?.toUpperCase(),
             previewImage: image
         }
 
+        if (!location.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                location: "City and state required"
+            }))
+        }
+
+        if (!name.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                name: "Group name required"
+            }))
+        }
+
+        if (!type) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                type: "Select group type"
+            }))
+        }
+
+        if (!privacy) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                privacy: "Select public or private"
+            }))
+        }
+
+        if (!about.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                about: "Group description required"
+            }))
+        }
+
+        if (!image.length) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                image: "Group image required"
+            }))
+        }
+
+        if (
+            !errors.name?.length, 
+            !errors.location?.length, 
+            !errors.about?.length, 
+            !errors.image?.length, 
+            !errors.privacy?.length,
+            !errors.type?.length
+        ) {
         return newGroup(group)
+        }
     }
 
 
@@ -71,9 +166,6 @@ export default function StartGroup() {
             <h2 className="start-heading">We'll walk you through a few steps to build your local community</h2>
             <hr></hr>
             <form onSubmit={onSubmit} className="start-form">
-            <ul>
-                        {errors?.map((error, idx) => <li className='errors' key={idx}>{error}</li>)}
-                    </ul>
             <div className="form-section">
                 <h3 className="form-heading">
                     Set your group's location
@@ -91,6 +183,7 @@ export default function StartGroup() {
                         }
                     }}
                     placeholder="City, STATE"></input>
+                    <p className="errors">{errors?.location}</p>
             </div>
 
             <div className="form-section">
@@ -104,6 +197,7 @@ export default function StartGroup() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="What is your group name?"
                     name="name"></input>
+                    <p className="errors">{errors?.name}</p>
             </div>
 
             <div className="form-section">
@@ -111,12 +205,12 @@ export default function StartGroup() {
                     Describe the purpose of your group
                 </h3>
                 <p className="form-caption">People will see this when we promote your group, but you'll be able to add to it later, too. 1. What's the purpose of the group? 2. Who should join? 3. What will you do at your events?</p>
-                <input 
-                    type="text"
+                <textarea
                     value={about} 
                     onChange={(e) => setAbout(e.target.value)}
                     placeholder="Please write at least 30 characters">
-                </input>
+                </textarea>
+                <p className="errors">{errors?.about}</p>
             </div>
 
             <div className="form-section">
@@ -128,6 +222,7 @@ export default function StartGroup() {
                     <option value="In person">In-person</option>
                     <option value="Online">Online</option>
                 </select>
+                <p className="errors">{errors?.type}</p>
 
                 <h3 className="form-heading">
                     Is this group private or public?
@@ -137,6 +232,7 @@ export default function StartGroup() {
                     <option value={true}>Private</option>
                     <option value={false}>Public</option>
                 </select>
+                <p className="errors">{errors?.privacy}</p>
 
                 <h3 className="form-heading">
                     Please add an image URL for your group below:
@@ -147,6 +243,7 @@ export default function StartGroup() {
                     onChange={(e) => setImage(e.target.value)}
                     placeholder="Image URL">
                 </input>
+                <p className="errors">{errors?.image}</p>
             </div>
 
             <button type="submit" disabled={disabled} className="dtl-btn">Create group</button>

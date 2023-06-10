@@ -78,7 +78,6 @@ export const createEvent = (id, event) => async dispatch => {
     const res = await csrfFetch(`/api/groups/${id}/events`, {
         method: "POST",
         body: JSON.stringify({
-            venueId: 2,
             capacity: 10,
             name,
             description,
