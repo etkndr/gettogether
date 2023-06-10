@@ -22,6 +22,7 @@ export default function EditGroup() {
     const [privacy, setPrivacy] = useState(group?.private)
     const [image, setImage] = useState("image URL")
     const [errors, setErrors] = useState([])
+    const [imgId, setImgId] = useState(0)
     const [disabled, setDisabled] = useState(false)
 
     useEffect(() => {
@@ -39,6 +40,7 @@ export default function EditGroup() {
             setState(group?.state)
             setPrivacy(group?.private)
             setImage(group?.GroupImages[0]?.url)
+            setImgId(group?.GroupImages[0]?.id)
         }
     }, [loaded, id])
 
@@ -101,15 +103,15 @@ export default function EditGroup() {
             }))
         }
     }, [name, location, city, about, state, image, privacy, type])
-        
-    const updateGroup = (group) => {
+       
+    const updateGroup = (group, imgId) => {
         dispatch(groupActions.editGroup(group, id))
         .then((res) => {
-            dispatch(groupActions.updateImg(id, image))
+            dispatch(groupActions.updateImg(id, image, imgId))
             history.push(`/group/${res.id}`)
         })
     }
-    
+
     const onSubmit = async (e) => {
         e.preventDefault()
 
@@ -173,7 +175,7 @@ export default function EditGroup() {
             !errors.privacy?.length,
             !errors.type?.length
         ) {
-        return updateGroup(group)
+        return updateGroup(group, imgId)
         }
     }
     
