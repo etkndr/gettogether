@@ -68,7 +68,6 @@ export default function GroupDetail() {
             else prev.push(curr)
             return prev
         }, [])
-
     return (
         <div className="content">
             <div className="breadcrumb"><NavLink to="/groups">Groups</NavLink> {">"} {group?.name}</div>
