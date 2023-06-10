@@ -89,7 +89,7 @@ router.get("/:id", async (req, res, next) => {
             model: Venue, attributes: ["id", "groupId", "address", "city", "state", "lat", "lng"]
         }
     ],
-        group: ["Group.id", "Organizer.id", "Venue.id", "GroupImage.id", "Membership.id"]
+        group: ["Group.id", "Organizer.id"]
     })
     
     if (!group) {
