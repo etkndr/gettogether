@@ -188,7 +188,7 @@ switch(action.type) {
         newState.currGroup = action.group
         return newState
     case ADD_IMG:
-        newState.allGroups[action.id].previewImage = action.image
+        newState.allGroups[action.id].GroupImages.push(action.image)
     case EDIT_IMG:
         delete newState.allGroups[action.id].previewImage
         newState.allGroups[action.id].previewImage = action.image
