@@ -18,24 +18,6 @@ export default function StartGroup() {
     const [errors, setErrors] = useState({})
     const [disabled, setDisabled] = useState(false)
 
-    //ENABLE SUBMIT
-    // useEffect(() => {
-    //     if (
-    //         name.length &&
-    //         about.length &&
-    //         city.length &&
-    //         state.length &&
-    //         image.length &&
-    //         type.length &&
-    //         !!privacy
-            
-    //     ) {
-    //         setDisabled(false)
-    //     } else {
-    //         setDisabled(true)
-    //     }
-    // }, [name, about, city, state, image, errors, privacy, type])
-
     //SET ERRORS
     useEffect(() => {
         
@@ -63,7 +45,7 @@ export default function StartGroup() {
             }))
         }
 
-        if (image?.length && ["png", "jpg", "jpeg"].indexOf(image?.split(".")[1]) < 0) {
+        if (image?.length && ["png", "jpg", "jpeg"].indexOf(image?.split(".")[image?.split(".").length - 1]) < 0) {
             setErrors(prevErrors => ({
                 ...prevErrors,
                 image: "Image URL must end in '.png', '.jpg', or '.jpeg'"
@@ -164,12 +146,12 @@ export default function StartGroup() {
         }
 
         if (
-            !errors.name.length, 
-            !errors.location.length, 
-            !errors.about.length, 
-            !errors.image.length, 
-            !errors.privacy.length,
-            !errors.type.length
+            !errors.name?.length, 
+            !errors.location?.length, 
+            !errors.about?.length, 
+            !errors.image?.length, 
+            !errors.privacy?.length,
+            !errors.type?.length
         ) {
         return newGroup(group)
         }
