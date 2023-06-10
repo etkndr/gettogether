@@ -85,11 +85,11 @@ router.get("/:id", async (req, res, next) => {
         {
             model: GroupImage, attributes: ["id", "url", "preview"]
         },
-        {
-            model: Venue, attributes: ["id", "groupId", "address", "city", "state", "lat", "lng"]
-        }
+        // {
+        //     model: Venue, attributes: ["id", "groupId", "address", "city", "state", "lat", "lng"]
+        // }
     ],
-        group: ["Group.id", "Organizer.id"]
+        group: ["Group.id", "Organizer.id", "GroupImages.id"]
     })
     
     if (!group) {
