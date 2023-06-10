@@ -92,12 +92,6 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-      validate: {
-        len: {
-          args: [4,4],
-          msg: "Price is invalid"
-        }
-      }
     },
   },
   {

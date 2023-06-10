@@ -409,7 +409,6 @@ router.post("/:id/events", async (req,res,next) => {
 
     const newEvent = await Event.create({
         groupId: id,
-        venueId,
         name, 
         type, 
         capacity, 
