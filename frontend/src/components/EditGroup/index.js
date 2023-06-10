@@ -105,7 +105,7 @@ export default function EditGroup() {
     const updateGroup = (group) => {
         dispatch(groupActions.editGroup(group, id))
         .then((res) => {
-            dispatch(groupActions.addImg(id, image))
+            dispatch(groupActions.updateImg(id, image))
             history.push(`/group/${res.id}`)
         })
     }

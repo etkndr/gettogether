@@ -8,7 +8,7 @@ const NEW_GROUP = "groups/newGroup"
 const DELETE_GROUP = "groups/deleteGroup"
 const EDIT_GROUP = "groups/editGroup"
 const ADD_IMG = "groups/image"
-const DLT_IMG = "groups/dltImage"
+const EDIT_IMG = "groups/editImage"
 
 const load = groups => {
     return {
@@ -53,9 +53,9 @@ const image = (id, image) => {
     }
 }
 
-const dltImg = (id, img) => {
+const editImg = (id, img) => {
     return {
-        type: DLT_IMG,
+        type: EDIT_IMG,
         id,
         img
     }
@@ -135,9 +135,6 @@ export const editGroup = (group, id) => async dispatch => {
 }
 
 export const addImg = (id, img) => async dispatch => {
-    const dlt = await csrfFetch(`/api/group-images/${id}`, {
-        method: "DELETE"
-    })
     const res = await csrfFetch(`/api/groups/${id}/images`, {
         method: "POST",
         body: JSON.stringify({
@@ -153,14 +150,21 @@ export const addImg = (id, img) => async dispatch => {
     }
 }
 
-export const deleteImage = (groupId, id) => async dispatch => {
-    const res = await csrfFetch(`/api/group-images/${id}`, {
+export const updateImg = (id, img) => async dispatch => {
+    const dlt = await csrfFetch(`/api/group-images/${id}`, {
         method: "DELETE"
+    })
+    const res = await csrfFetch(`/api/groups/${id}/images`, {
+        method: "POST",
+        body: JSON.stringify({
+            url: img,
+            preview: true
+        })
     })
 
     if (res.ok) {
         const data = await res.json()
-        dispatch(dltImg(groupId, data))
+        dispatch(editImg(id, data))
         return data
     }
 }
@@ -184,11 +188,10 @@ switch(action.type) {
         newState.currGroup = action.group
         return newState
     case ADD_IMG:
+        newState.allGroups[action.id].previewImage = action.image
+    case EDIT_IMG:
         delete newState.allGroups[action.id].previewImage
         newState.allGroups[action.id].previewImage = action.image
-        return newState
-    case DLT_IMG:
-        delete newState.currGroup.GroupImages[action.image.id]
         return newState
     default:
         return state
