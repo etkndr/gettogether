@@ -38,3 +38,11 @@
     width: 300px;
     font-size: 10.5pt;
 }
+
+textarea {
+    border: 2px solid black;
+    width: 300px;
+    height: 100px;
+    max-width: 300px;
+    max-height: 100px;
+}
