@@ -44,7 +44,7 @@ module.exports = {
           organizerId: john[0].id,
           name: "JavaScripters",
           about:
-            "faucibus et molestie ac feugiat sed lectus vestibulum mattis ullamcorper",
+            "Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare.",
           type: "In person",
           private: false,
           city: "Columbus",
@@ -54,7 +54,7 @@ module.exports = {
           organizerId: john[0].id,
           name: "New parents",
           about:
-            "faucibus et molestie ac feugiat sed lectus vestibulum mattis ullamcorper",
+            "Volutpat lacus laoreet non curabitur gravida arcu. Amet luctus venenatis lectus magna.",
           type: "Online",
           private: false,
           city: "Knoxville",
