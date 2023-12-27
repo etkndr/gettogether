@@ -1,40 +1,51 @@
-'use strict';
+"use strict";
 const bcrypt = require("bcryptjs");
 
 let options = {};
-if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+if (process.env.NODE_ENV === "production") {
+  options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    options.tableName = 'GroupImages';
+  async up(queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
     return queryInterface.bulkInsert(options, [
       {
         groupId: 1,
         url: "https://i.imgur.com/wV727LR.jpg",
-        preview: true
+        preview: true,
       },
       {
         groupId: 2,
         url: "https://i.imgur.com/hces8eJ.jpg",
-        preview: true
-      }
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    ])},
+        preview: true,
+      },
+      {
+        groupId: 3,
+        url: "https://i.imgur.com/l5SoO6E.jpg",
+        preview: true,
+      },
+      {
+        groupId: 4,
+        url: "https://i.imgur.com/hoOGxaJ.jpg",
+        preview: true,
+      },
+      /**
+       * Add seed commands here.
+       *
+       * Example:
+       * await queryInterface.bulkInsert('People', [{
+       *   name: 'John Doe',
+       *   isBetaMember: false
+       * }], {});
+       */
+    ]);
+  },
 
-    async down (queryInterface, Sequelize) {
-      options.tableName = 'GroupImages';
-      const Op = Sequelize.Op;
-      return queryInterface.bulkDelete(options, {});
-    }
+  async down(queryInterface, Sequelize) {
+    options.tableName = "GroupImages";
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {});
+  },
 };
