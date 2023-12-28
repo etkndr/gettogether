@@ -1,4 +1,4 @@
-<h1 align="center">[getTogether](https://get-together-3yf3.onrender.com) - Meetup clone</h1>
+<h1 align="center">getTogether - Meetup clone</h1>
 
 ## Technologies Used
 
