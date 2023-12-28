@@ -71,7 +71,14 @@ module.exports = {
     return queryInterface.bulkDelete(
       options,
       {
-        name: { [Op.in]: ["Group 1", "Group 2", "Group 3"] },
+        name: {
+          [Op.in]: [
+            "Synth enthusiasts",
+            "Coffee addicts :)",
+            "JavaScripters",
+            "New parents",
+          ],
+        },
       },
       {}
     );
