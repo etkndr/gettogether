@@ -60,7 +60,6 @@ At this point, the application should be up and running, and will be available i
 <br/>
 <br/>
 
-![image](https://github.com/etkndr/gettogether/assets/103692901/be3cdd98-0f1e-4dc1-8806-9eca17ba0542)
-
+![image](https://github.com/etkndr/gettogether/assets/103692901/58ebafd2-fe25-4702-8d8a-2764255c20a7)
 
 
